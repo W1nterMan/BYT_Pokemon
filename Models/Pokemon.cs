@@ -1,6 +1,14 @@
-﻿namespace Models;
+﻿using System.Xml;
+using System.Xml.Serialization;
+
+namespace Models;
 
 [Serializable]
+[XmlInclude(typeof(Fire))]
+[XmlInclude(typeof(Flying))]
+[XmlInclude(typeof(Water))]
+[XmlInclude(typeof(Land))]
+[XmlInclude(typeof(Underwater))]
 public class Pokemon
 {
     private static List<Pokemon> _extent=new List<Pokemon>();
@@ -17,9 +25,9 @@ public class Pokemon
         get =>_healthPoints;
         set
         {
-            if (value <= 0)
+            if (value < 0)
             {
-                throw new ArgumentException("HealthPoints must be greater than 0");
+                throw new ArgumentException("HealthPoints cannot be negative");
             }
             
             _healthPoints= value;
@@ -105,18 +113,62 @@ public class Pokemon
         BaseStats = baseStats;
     }
 
-    static void AddPokemon(Pokemon pokemon)
+    private static void AddPokemon(Pokemon pokemon)
     {
         if (pokemon == null)
         {
-            throw new ArgumentNullException("Pokemon must not be null");
+            throw new ArgumentException("Pokemon can not be null");
         }
         _extent.Add(pokemon);
     }
 
-    static List<Pokemon> GetPokemons()
+    public static List<Pokemon> GetPokemons()
     {
         return _extent;
+    }
+
+    public static void save(string path = "pokemons.xml")
+    {
+        StreamWriter file = File.CreateText(path);
+        XmlSerializer xmlSerializer = new XmlSerializer(typeof(List<Pokemon>)); 
+        using (XmlTextWriter writer = new XmlTextWriter(file)) 
+        {
+            xmlSerializer.Serialize(writer, _extent); 
+        }
+    }
+    
+    public static bool load(string path = "pokemons.xml")
+    {
+        StreamReader file;
+        try
+        {
+            file = File.OpenText(path);
+        }
+        catch (FileNotFoundException)
+        {
+            _extent.Clear();
+            return false;    
+        }
+
+        XmlSerializer xmlSerializer = new XmlSerializer(typeof(List<Pokemon>));
+        using (XmlTextReader reader = new XmlTextReader(file))
+        {
+            try
+            {
+                _extent = (List<Pokemon>)xmlSerializer.Deserialize(reader);
+            }
+            catch (InvalidCastException)
+            {
+                _extent.Clear();
+                return false;   
+            }
+            catch (Exception)
+            {
+                _extent.Clear();
+                return false;   
+            }
+        }
+        return true; 
     }
     
 }

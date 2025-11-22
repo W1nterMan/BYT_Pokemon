@@ -1,0 +1,117 @@
+﻿using System.Xml;
+using System.Xml.Serialization;
+
+namespace Models;
+
+[Serializable]
+public class Nature
+{
+    private static List<Nature> _extent;
+    private string _name;
+    private int _raisedStat; //0~5, according to index of _baseStats of Pokemon
+    private int _loweredStat; //same
+    public static double StatsBoostRate { get; } = 0.1;
+
+    public string Name
+    {
+        get => _name;
+        set
+        {
+            if (string.IsNullOrEmpty(value))
+            {
+                throw new ArgumentException("Name cannot be empty");
+            }
+            _name = value;
+        }
+    }
+    public int RaisedStat
+    {
+        get =>_raisedStat;
+        set
+        {
+            if (value < 0 || value > 5)
+            {
+                throw new ArgumentException("Raised stat must be between 0 and 5");
+            }
+            _raisedStat = value;
+        }
+    }
+    
+    public int LoweredStat
+    {
+        get =>_loweredStat;
+        set
+        {
+            if (value < 0 || value > 5)
+            {
+                throw new ArgumentException("Lowered stat must be between 0 and 5");
+            }
+            _loweredStat = value;
+        }
+    }
+
+    public Nature(string name,int raisedStat, int loweredStat)
+    {
+        Name = name;
+        RaisedStat = raisedStat;
+        LoweredStat = loweredStat;
+    }
+    
+    private static void AddNature(Nature nature)
+    {
+        if (nature == null)
+        {
+            throw new ArgumentException("Nature can not be null");
+        }
+        _extent.Add(nature);
+    }
+
+    public static List<Nature> GetNatures()
+    {
+        return _extent;
+    }
+
+    public static void save(string path = "natures.xml")
+    {
+        StreamWriter file = File.CreateText(path);
+        XmlSerializer xmlSerializer = new XmlSerializer(typeof(List<Nature>)); 
+        using (XmlTextWriter writer = new XmlTextWriter(file)) 
+        {
+            xmlSerializer.Serialize(writer, _extent); 
+        }
+    }
+    
+    public static bool load(string path = "natures.xml")
+    {
+        StreamReader file;
+        try
+        {
+            file = File.OpenText(path);
+        }
+        catch (FileNotFoundException)
+        {
+            _extent.Clear();
+            return false;    
+        }
+
+        XmlSerializer xmlSerializer = new XmlSerializer(typeof(List<Pokemon>));
+        using (XmlTextReader reader = new XmlTextReader(file))
+        {
+            try
+            {
+                _extent = (List<Nature>)xmlSerializer.Deserialize(reader);
+            }
+            catch (InvalidCastException)
+            {
+                _extent.Clear();
+                return false;   
+            }
+            catch (Exception)
+            {
+                _extent.Clear();
+                return false;   
+            }
+        }
+        return true; 
+    }
+}
