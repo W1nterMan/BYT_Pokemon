@@ -1,9 +1,16 @@
-﻿using Models;
+﻿using System.Reflection;
+using Models;
 
 namespace Test;
 
 public class PokemonInBagTest
 {
+    [SetUp]
+    public void Setup()
+    {
+        var field =typeof(PokemonInBag).GetField("_extent", BindingFlags.Static|BindingFlags.NonPublic);
+        field.SetValue(null, new List<PokemonInBag>());
+    }
     [Test]
     public void PokemonInBag_Invalid_Argument_ThrowException()
     {
@@ -18,8 +25,8 @@ public class PokemonInBagTest
 
         var extent = PokemonInBag.GetPokemonsInBag();
         Assert.That(extent.Count, Is.EqualTo(2));
-        Assert.That(extent[0].Pokeball, Is.EqualTo("Ultra Ball"));
-        Assert.That(extent[1].Pokeball, Is.EqualTo("Special Ball"));
+        Assert.That(extent.First(p=>p.Pokeball=="Ultra Ball").Pokeball, Is.EqualTo("Ultra Ball"));
+        Assert.That(extent.First(p=>p.Pokeball=="Special Ball").Pokeball, Is.EqualTo("Special Ball"));
     }
 
     [Test]
@@ -29,14 +36,14 @@ public class PokemonInBagTest
         PokemonInBag pokemonB = new PokemonInBag("Special Ball");
 
         var extent = PokemonInBag.GetPokemonsInBag();
-        Assert.That(extent[0].Pokeball, Is.EqualTo("Ultra Ball"));
-        Assert.That(extent[1].Pokeball, Is.EqualTo("Special Ball"));
+        Assert.That(extent.First(p=>p.Pokeball=="Ultra Ball").Pokeball, Is.EqualTo("Ultra Ball"));
+        Assert.That(extent.First(p=>p.Pokeball=="Special Ball").Pokeball, Is.EqualTo("Special Ball"));
         
         pokemonA.Pokeball = "Normal Ball";
         pokemonB.Pokeball = "Super Ball";
         
-        Assert.That(extent[0].Pokeball, Is.EqualTo("Normal Ball"));
-        Assert.That(extent[1].Pokeball, Is.EqualTo("Super Ball"));
+        Assert.That(extent.First(p=>p.Pokeball=="Normal Ball").Pokeball, Is.EqualTo("Normal Ball"));
+        Assert.That(extent.First(p=>p.Pokeball=="Super Ball").Pokeball, Is.EqualTo("Super Ball"));
     }
 
     [Test]

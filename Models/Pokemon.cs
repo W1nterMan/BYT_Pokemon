@@ -19,6 +19,7 @@ public class Pokemon
     private double _weight;
     private int[] _baseStats = new int[6]; // <-- [hp,attack,defence,sp.atk,sp.def,speed]
     private string? _status; //can be "","Active","Defeated"
+    
 
     public int Id
     {
@@ -102,7 +103,7 @@ public class Pokemon
         set
         {
             if (!string.IsNullOrEmpty(value) &&
-                !(value.Equals("Active") || value.Equals("Defeated")))
+                !(value.Equals(nameof(StatusEnum.Active)) || value.Equals(nameof(StatusEnum.Defeated))))
             {
                 throw new ArgumentException("Status must not be null or empty");
             }
@@ -111,7 +112,7 @@ public class Pokemon
         }
     } 
 
-    public Pokemon? EvolvesTo { get; set; }
+    //public Pokemon? EvolvesTo { get; set; }
     
     //comment out at current step
     //public PokemonInBag? PokemonInBag { get; set; }
@@ -188,4 +189,10 @@ public class Pokemon
         return true; 
     }
     
+}
+
+public enum StatusEnum
+{
+Active,
+Defeated
 }

@@ -1,9 +1,16 @@
+using System.Reflection;
 using Models;
 
 namespace Test;
 
 public class PokemonTest
 {
+    [SetUp]
+    public void Setup()
+    {
+        var field =typeof(Pokemon).GetField("_extent", BindingFlags.Static|BindingFlags.NonPublic);
+        field.SetValue(null, new List<Pokemon>());
+    }
     [TestCase(0,"pokemonA",100,100,100,new []{1,1,1,1,1,1})]
     [TestCase(1,"",100,100,100,new []{1,1,1,1,1,1})]
     [TestCase(1,"pokemonA",-1,100,100,new []{1,1,1,1,1,1})]
@@ -17,7 +24,7 @@ public class PokemonTest
         Assert.Throws<ArgumentException>(()=>new Pokemon(id,name,healthPoints,expPoints,weight,baseStats));
     }
     
-    [Test]
+    /*[Test]
     public void Pokemon_Nullable_EvolvesTo_Test()
     {
         Pokemon pokemonA=new Pokemon(
@@ -27,6 +34,20 @@ public class PokemonTest
         Assert.IsNull(pokemonA.EvolvesTo);
         pokemonA.EvolvesTo = pokemonB;
         Assert.IsNotNull(pokemonA.EvolvesTo);
+    }*/
+
+    [Test]
+    public void Pokemon_Nullable_Status_Test()
+    {
+        Pokemon pokemonA=new Pokemon(
+            1,"pokemonA",100,100,100,[1,1,1,1,1,1]);
+        Pokemon pokemonB=new Pokemon(
+            1,"pokemonB",100,100,100,[1,1,1,1,1,1]);
+        Assert.IsNull(pokemonA.Status);
+        Assert.IsNull(pokemonB.Status);
+        pokemonA.Status = nameof(StatusEnum.Active);
+        Assert.IsNotNull(pokemonA.Status);
+        Assert.Throws<ArgumentException>(() => pokemonB.Status = "something else");
     }
 
     [Test]
@@ -70,8 +91,8 @@ public class PokemonTest
 
         var extent = Pokemon.GetPokemons();
         Assert.That(extent.Count, Is.EqualTo(2));
-        Assert.That(extent[0].Name, Is.EqualTo("fireA"));
-        Assert.That(extent[1].Name, Is.EqualTo("waterA"));
+        Assert.That(extent.Find(p=>p.Name=="fireA").Name, Is.EqualTo("fireA"));
+        Assert.That(extent.Find(p=>p.Name=="waterA").Name, Is.EqualTo("waterA"));
     }
 
     [Test]
@@ -83,14 +104,14 @@ public class PokemonTest
             1, "waterA", 100, 100, 100, [1, 1, 1, 1, 1, 1], true);
 
         var extent = Pokemon.GetPokemons();
-        Assert.That(extent[0].Name, Is.EqualTo("fireA"));
-        Assert.That(extent[1].Name, Is.EqualTo("waterA"));
+        Assert.That(extent.Find(p=>p.Name=="fireA").Name, Is.EqualTo("fireA"));
+        Assert.That(extent.Find(p=>p.Name=="waterA").Name, Is.EqualTo("waterA"));
         
         firePokemon.Name = "fireB";
         waterPokemon.Name = "waterB";
         
-        Assert.That(extent[0].Name, Is.EqualTo("fireB"));
-        Assert.That(extent[1].Name, Is.EqualTo("waterB"));
+        Assert.That(extent.Find(p=>p.Name=="fireB").Name, Is.EqualTo("fireB"));
+        Assert.That(extent.Find(p=>p.Name=="waterB").Name, Is.EqualTo("waterB"));
     }
 
     [Test]

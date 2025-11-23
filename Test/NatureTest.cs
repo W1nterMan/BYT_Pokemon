@@ -1,9 +1,17 @@
-﻿using Models;
+﻿using System.Reflection;
+using Models;
 
 namespace Test;
 
 public class NatureTest
 {
+    [SetUp]
+    public void Setup()
+    {
+        var field =typeof(Nature).GetField("_extent", BindingFlags.Static|BindingFlags.NonPublic);
+        field.SetValue(null, new List<Nature>());
+    }
+    
     [TestCase("",1,2)]
     [TestCase("Brave",6,2)]
     [TestCase("Brave",1,6)]
@@ -29,8 +37,8 @@ public class NatureTest
 
         var extent = Nature.GetNatures();
         Assert.That(extent.Count, Is.EqualTo(2));
-        Assert.That(extent[0].Name, Is.EqualTo("Brave"));
-        Assert.That(extent[1].Name, Is.EqualTo("Lonely"));
+        Assert.That(extent.First(n=>n.Name=="Brave").Name, Is.EqualTo("Brave"));
+        Assert.That(extent.First(n=>n.Name=="Lonely").Name, Is.EqualTo("Lonely"));
     }
 
     [Test]
@@ -40,14 +48,14 @@ public class NatureTest
         Nature lonely = new Nature("Lonely",0,3);
 
         var extent = Nature.GetNatures();
-        Assert.That(extent[0].Name, Is.EqualTo("Brave"));
-        Assert.That(extent[1].Name, Is.EqualTo("Lonely"));
+        Assert.That(extent.First(n=>n.Name=="Brave").Name, Is.EqualTo("Brave"));
+        Assert.That(extent.First(n=>n.Name=="Lonely").Name, Is.EqualTo("Lonely"));
         
         brave.Name = "Naughty";
         lonely.Name = "Mild";
         
-        Assert.That(extent[0].Name, Is.EqualTo("Naughty"));
-        Assert.That(extent[1].Name, Is.EqualTo("Mild"));
+        Assert.That(extent.First(n=>n.Name=="Naughty").Name, Is.EqualTo("Naughty"));
+        Assert.That(extent.First(n=>n.Name=="Mild").Name, Is.EqualTo("Mild"));
     }
 
     [Test]
