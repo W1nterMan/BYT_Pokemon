@@ -6,10 +6,29 @@ namespace Models;
 [Serializable]
 public class PokemonInBag
 {
-    private static List<PokemonInBag> _extent;
+    private static List<PokemonInBag> _extent=new List<PokemonInBag>();
+    //comment out at current step
+    //private Trainer _trainer; 
+    //private Pokemon _pokemon;
     private string _pokeball;
-    public Trainer Trainer { get; set; }
-    public Pokemon Pokemon { get; set; }
+
+    /*public Trainer Trainer
+    {
+        get => _trainer;
+        set
+        {
+            _trainer = value ?? throw new ArgumentException("Trainer can not be null");
+        }
+    }*/
+
+    /*public Pokemon Pokemon
+    {
+        get => _pokemon;
+        set
+        {
+            _pokemon = value ?? throw new ArgumentException("Pokemon can not be null");
+        }
+    }*/
 
     public string Pokeball
     {
@@ -24,12 +43,15 @@ public class PokemonInBag
         }
     }
     //we can add date here for more attributes.
+    
+    public PokemonInBag(){}
 
-    public PokemonInBag(Trainer trainer, Pokemon pokemon, string pokeball)
+    public PokemonInBag(/*Trainer trainer, Pokemon pokemon,*/ string pokeball)
     {
-        Trainer = trainer;
-        Pokemon = pokemon;
+        //Trainer = trainer;
+        //Pokemon = pokemon;
         Pokeball = pokeball;
+        AddPokemonInBag(this);
     }
     
     private static void AddPokemonInBag(PokemonInBag pokemonInBag)

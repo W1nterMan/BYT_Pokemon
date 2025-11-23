@@ -17,6 +17,8 @@ public class Fire : Pokemon
             _bodyTemperature = value;
         }
     }
+    
+    public Fire(){}
 
     public Fire(int id, string name, int healthPoints, int expPoints, double weight, int[] baseStats, double bodyTemperature) :
         base(id, name, healthPoints, expPoints, weight, baseStats)

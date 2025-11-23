@@ -6,11 +6,11 @@ namespace Models;
 [Serializable]
 public class Nature
 {
-    private static List<Nature> _extent;
+    private static List<Nature> _extent=new List<Nature>();
     private string _name;
     private int _raisedStat; //0~5, according to index of _baseStats of Pokemon
     private int _loweredStat; //same
-    public static double StatsBoostRate { get; } = 0.1;
+    public static double StatsBoostRate { get;} = 0.1;
 
     public string Name
     {
@@ -21,6 +21,7 @@ public class Nature
             {
                 throw new ArgumentException("Name cannot be empty");
             }
+
             _name = value;
         }
     }
@@ -33,6 +34,7 @@ public class Nature
             {
                 throw new ArgumentException("Raised stat must be between 0 and 5");
             }
+            
             _raisedStat = value;
         }
     }
@@ -49,12 +51,15 @@ public class Nature
             _loweredStat = value;
         }
     }
+    
+    public Nature(){}
 
     public Nature(string name,int raisedStat, int loweredStat)
     {
         Name = name;
         RaisedStat = raisedStat;
         LoweredStat = loweredStat;
+        AddNature(this);
     }
     
     private static void AddNature(Nature nature)
@@ -62,6 +67,12 @@ public class Nature
         if (nature == null)
         {
             throw new ArgumentException("Nature can not be null");
+        }
+        if(nature.RaisedStat == nature.LoweredStat)
+            throw new ArgumentException("Raised stat must be different than the lowered stat");
+        if (_extent.Exists(n => n.Name == nature.Name))
+        {
+            throw new ArgumentException(nature.Name+" already exists");
         }
         _extent.Add(nature);
     }
@@ -94,7 +105,7 @@ public class Nature
             return false;    
         }
 
-        XmlSerializer xmlSerializer = new XmlSerializer(typeof(List<Pokemon>));
+        XmlSerializer xmlSerializer = new XmlSerializer(typeof(List<Nature>));
         using (XmlTextReader reader = new XmlTextReader(file))
         {
             try

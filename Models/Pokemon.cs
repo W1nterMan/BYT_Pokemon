@@ -12,14 +12,27 @@ namespace Models;
 public class Pokemon
 {
     private static List<Pokemon> _extent=new List<Pokemon>();
+    private int _id;
     private int _healthPoints;
     private string _name;
     private int _expPoints;
     private double _weight;
     private int[] _baseStats = new int[6]; // <-- [hp,attack,defence,sp.atk,sp.def,speed]
     private string? _status; //can be "","Active","Defeated"
-    
-    public int Id { get; set; }
+
+    public int Id
+    {
+        get => _id;
+        set
+        {
+            if (value <= 0)
+            {
+                throw new ArgumentException("Id must be greater than 0");
+            }
+            _id = value;
+        }
+    }
+
     public int HealthPoints
     {
         get =>_healthPoints;
@@ -99,8 +112,11 @@ public class Pokemon
     } 
 
     public Pokemon? EvolvesTo { get; set; }
-
-    public PokemonInBag? PokemonInBag { get; set; } 
+    
+    //comment out at current step
+    //public PokemonInBag? PokemonInBag { get; set; }
+    
+    public Pokemon(){}
     
     public Pokemon(int id, string name, int healthPoints, int expPoints, double weight, int[] baseStats)
     {
@@ -111,6 +127,7 @@ public class Pokemon
         ExpPoints = expPoints;
         Weight = weight;
         BaseStats = baseStats;
+        AddPokemon(this);
     }
 
     private static void AddPokemon(Pokemon pokemon)
