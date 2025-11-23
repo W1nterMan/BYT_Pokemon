@@ -7,7 +7,7 @@ namespace Models
     {
         private double _priceMultiplier;
         
-        public List<string> ItemsSold { get; set; } = new List<string>();
+        public List<string> ItemsSold { get; set; } = new List<string>(); //dont know for sure if this would be complex in future
 
         public double PriceMultiplier
         {

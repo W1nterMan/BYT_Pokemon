@@ -7,11 +7,11 @@ namespace Models
     {
         private string _leader;
         
-        public string? BadgeName { get; set; }
+        public string? BadgeName { get; set; } //why nullable? _badgeName?
         
         public int MinRequiredBadges { get; set; }
-        public List<string> TrainersInGym { get; set; } = new List<string>();
-
+        
+        public List<string> TrainersInGym { get; set; } = new List<string>(); 
         public string Leader
         {
             get => _leader;
@@ -32,9 +32,9 @@ namespace Models
 
         public Gym() { }
 
-        public Gym(string name, bool isAccessible, string leader) : base(name, isAccessible)
+        public Gym(string badgeName, bool isAccessible, string leader) : base(badgeName, isAccessible)
         {
-            Leader = leader;
+            Leader = leader; //than why leader is not in base() too?
         }
     }
 }

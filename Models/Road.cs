@@ -10,7 +10,7 @@ namespace Models
         private static List<Road> _extent = new List<Road>();
 
         private int _number;
-        private string _terrainType;
+        private string _terrainType; //TODO:maybe add some defined list of possible types
         
         public Road() { }
 

@@ -4,6 +4,7 @@ namespace Models
     [Serializable]
     public class PC
     {
+        //extent?
         private int _computerNumber;
 
         public int ComputerNumber
@@ -24,6 +25,7 @@ namespace Models
         public PC(int computerNumber)
         {
             ComputerNumber = computerNumber;
+            //extent.add?
         }
 
         public void AccessStorage()

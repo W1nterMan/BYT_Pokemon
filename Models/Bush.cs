@@ -4,9 +4,10 @@ namespace Models
     [Serializable]
     public class Bush
     {
+        //where is extent? static?
         private double _encounterChance;
 
-        public bool IsActive { get; set; }
+        public bool IsActive { get; set; } //should be mandatory _isActive and IsActive 
 
         public double EncounterChance
         {
@@ -27,6 +28,7 @@ namespace Models
         {
             IsActive = isActive;
             EncounterChance = encounterChance;
+            //extend.add?
         }
 
         public void InvestigateBush() 

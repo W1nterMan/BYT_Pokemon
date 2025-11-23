@@ -8,10 +8,10 @@ namespace Models
     {
         private static List<Location> _extent = new List<Location>();
 
-        public string Name { get; set; }
-        public string Type { get; set; }
+        public string Name { get; set; } //should be mandatory with _name and Name
+        public string Type { get; set; } //should be mandatory with _type and Type
         
-        public Coordinates Coords { get; set; }
+        public Coordinates Coords { get; set; }     //complex attribute = class?
 
         public Location() { }
 
@@ -19,9 +19,9 @@ namespace Models
         {
             if (string.IsNullOrEmpty(name)) throw new ArgumentException("Name required");
             
-            Name = name;
+            Name = name; // 11 line
             Coords = new Coordinates(x, y);
-            Type = type;
+            Type = type; // 12 line
 
             addLocation(this);
         }
@@ -34,7 +34,6 @@ namespace Models
 
         public static List<Location> GetExtent() => new List<Location>(_extent);
         
-
         public static void save(string path = "locations.xml")
         {
             StreamWriter file = File.CreateText(path);
