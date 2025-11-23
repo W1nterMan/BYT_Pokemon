@@ -5,8 +5,7 @@ namespace Models
     public class Bush
     {
         //where is extent? static? -> When we link classes together bush will be serialized and stored with road so no need to store it by itself
-        // I assume encounter chance may differ from bush to bush maybe it will be somethin like math.random() during creation idk can be static if not
-        private double _encounterChance;
+        private static double _encounterChance;
         
         private bool _isActive;
         public bool IsActive
@@ -16,7 +15,7 @@ namespace Models
         }
 
 
-        public double EncounterChance
+        public static double EncounterChance
         {
             get => _encounterChance;
             set
