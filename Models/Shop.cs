@@ -7,7 +7,8 @@ namespace Models
     {
         private double _priceMultiplier;
         
-        public List<string> ItemsSold { get; set; } = new List<string>(); //dont know for sure if this would be complex in future
+        public List<string> ItemsSold { get; set; } = new List<string>(); //dont know for sure if this would be complex in future -> Yes most likely it will but
+                                                                          //for the time being we dont have item class specified in the diagram and have no idea what is needed 
 
         public double PriceMultiplier
         {

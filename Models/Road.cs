@@ -10,11 +10,11 @@ namespace Models
         private static List<Road> _extent = new List<Road>();
 
         private int _number;
-        private string _terrainType; //TODO:maybe add some defined list of possible types
+        private TerrainType _terrainType;
         
         public Road() { }
 
-        public Road(int number, string terrainType)
+        public Road(int number, TerrainType terrainType)
         {
             Number = number;
             TerrainType = terrainType;
@@ -32,12 +32,12 @@ namespace Models
             }
         }
 
-        public string TerrainType
+        public TerrainType TerrainType
         {
             get => _terrainType;
             set
             {
-                if (string.IsNullOrEmpty(value)) throw new ArgumentException("Terrain type cannot be empty.");
+                if (!Enum.IsDefined(typeof(TerrainType), value)) throw new ArgumentException("Invalid terrain type.");
                 _terrainType = value;
             }
         }

@@ -7,7 +7,16 @@ namespace Models
     {
         private string _leader;
         
-        public string? BadgeName { get; set; } //why nullable? _badgeName?
+        private string _badgeName { get; set; }
+        public string BadgeName
+        {
+            get => _badgeName;
+            set
+            {
+                if (string.IsNullOrEmpty(value)) throw new ArgumentException("Badge name required.");
+                _badgeName = value;
+            }
+        }
         
         public int MinRequiredBadges { get; set; }
         
@@ -34,7 +43,7 @@ namespace Models
 
         public Gym(string badgeName, bool isAccessible, string leader) : base(badgeName, isAccessible)
         {
-            Leader = leader; //than why leader is not in base() too?
+            Leader = leader; //than why leader is not in base() too? -> building doesnt have a field leader. So we cant set it in base
         }
     }
 }

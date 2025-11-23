@@ -4,7 +4,7 @@ namespace Models
     [Serializable]
     public class PC
     {
-        //extent?
+        //extent? -> When we link classes together pc will be serialized and stored with pokecenter so no need to store it by itself
         private int _computerNumber;
 
         public int ComputerNumber
@@ -25,7 +25,7 @@ namespace Models
         public PC(int computerNumber)
         {
             ComputerNumber = computerNumber;
-            //extent.add?
+            //extent.add? -> line 7
         }
 
         public void AccessStorage()

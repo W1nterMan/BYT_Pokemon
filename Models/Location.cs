@@ -8,20 +8,39 @@ namespace Models
     {
         private static List<Location> _extent = new List<Location>();
 
-        public string Name { get; set; } //should be mandatory with _name and Name
-        public string Type { get; set; } //should be mandatory with _type and Type
+        private string _name;
+        public string Name
+        {
+            get => _name;
+            set
+            {
+                if (string.IsNullOrEmpty(value)) throw new ArgumentException("Name required.");
+                _name = value;
+            }
+        }
+
+        private LocationType _type;
+        public LocationType Type
+        {
+            get => _type;
+            set
+            {
+                if (!Enum.IsDefined(typeof(LocationType), value)) throw new ArgumentException("Invalid Type.");
+                _type = value;
+            }
+        }
         
-        public Coordinates Coords { get; set; }     //complex attribute = class?
+        public Coordinates Coords { get; set; }     //complex attribute = class? -> concluded that we need to talk to teacher about this
 
         public Location() { }
-
-        public Location(string name, int x, int y, string type)
+        
+        public Location(string name, int x, int y, LocationType type)
         {
             if (string.IsNullOrEmpty(name)) throw new ArgumentException("Name required");
             
-            Name = name; // 11 line
+            Name = name;
             Coords = new Coordinates(x, y);
-            Type = type; // 12 line
+            Type = type;
 
             addLocation(this);
         }

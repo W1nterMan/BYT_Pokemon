@@ -10,8 +10,8 @@ public class LocationTest
         string testPath = "test_locations.xml";
         if (File.Exists(testPath)) File.Delete(testPath);
         
-        var loc1 = new Location("Town 1", 10, 20, "Town");
-        var loc2 = new Location("Village 1", 50, 50, "Village");
+        var loc1 = new Location("Town 1", 10, 20, LocationType.Town);
+        var loc2 = new Location("Village 1", 50, 50, LocationType.Village);
         
         Assert.IsTrue(Location.GetExtent().Count >= 2);
         
