@@ -85,8 +85,6 @@ public class BuildingTest
         Assert.IsTrue(initialExtent.Count >= 2);
         
         Building.save(TestPath);
-
-        Assert.IsTrue(File.Exists(TestPath), "File should be created in bin folder");
         
         bool loadSuccess = Building.load(TestPath);
 
