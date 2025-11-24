@@ -63,7 +63,7 @@ namespace Models
         
         public static bool load(string path = "buildings.xml")
         {
-            return Serializer.Load(path, out _extent);
+            return Serializer.Load(path,  _extent);
         }
     }
 }

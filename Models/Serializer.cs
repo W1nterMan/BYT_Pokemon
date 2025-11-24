@@ -26,7 +26,7 @@ public class Serializer
         serializer.Serialize(writer,extent);
     }
 
-    public static bool Load<T>(string path, out List<T> extent)
+    public static bool Load<T>(string path,  List<T> extent)
     {
         // Pokemon <- bin <- debug <- net8.0 (3 .. needed to go up for solution)
         string solutionDir = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", ".."));
