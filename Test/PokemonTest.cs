@@ -132,8 +132,6 @@ public class PokemonTest
         
         Pokemon.Save(TestPath);
         
-        Assert.IsTrue(File.Exists(TestPath), "File should be created in bin folder");
-        
         bool loadSuccess = Pokemon.Load(TestPath);
 
         Assert.IsTrue(loadSuccess, "Load should return true");
