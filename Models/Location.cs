@@ -55,27 +55,12 @@ namespace Models
         
         public static void save(string path = "locations.xml")
         {
-            StreamWriter file = File.CreateText(path);
-            XmlSerializer xmlSerializer = new XmlSerializer(typeof(List<Location>));
-            using (XmlTextWriter writer = new XmlTextWriter(file))
-            {
-                xmlSerializer.Serialize(writer, _extent);
-            }
+            Serializer.Save(path, _extent);
         }
 
         public static bool load(string path = "locations.xml")
         {
-            StreamReader file;
-            try { file = File.OpenText(path); }
-            catch (FileNotFoundException) { _extent.Clear(); return false; }
-
-            XmlSerializer xmlSerializer = new XmlSerializer(typeof(List<Location>));
-            using (XmlTextReader reader = new XmlTextReader(file))
-            {
-                try { _extent = (List<Location>)xmlSerializer.Deserialize(reader); }
-                catch (Exception) { _extent.Clear(); return false; }
-            }
-            return true;
+            return Serializer.Load(path,  _extent);
         }
     }
 }

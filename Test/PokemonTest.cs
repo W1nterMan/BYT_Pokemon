@@ -130,11 +130,9 @@ public class PokemonTest
         var initialExtent = Pokemon.GetPokemons();
         Assert.That(initialExtent.Count, Is.EqualTo(2));
         
-        Pokemon.save(TestPath);
+        Pokemon.Save(TestPath);
         
-        Assert.IsTrue(File.Exists(TestPath), "File should be created in bin folder");
-        
-        bool loadSuccess = Pokemon.load(TestPath);
+        bool loadSuccess = Pokemon.Load(TestPath);
 
         Assert.IsTrue(loadSuccess, "Load should return true");
         

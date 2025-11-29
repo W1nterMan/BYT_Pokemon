@@ -52,41 +52,12 @@ namespace Models
         
         public static void save(string path = "roads.xml")
         {
-            StreamWriter file = File.CreateText(path);
-            XmlSerializer xmlSerializer = new XmlSerializer(typeof(List<Road>));
-            using (XmlTextWriter writer = new XmlTextWriter(file))
-            {
-                xmlSerializer.Serialize(writer, _extent);
-            }
+            Serializer.Save(path, _extent);
         }
         
         public static bool load(string path = "roads.xml")
         {
-            StreamReader file;
-            try
-            {
-                file = File.OpenText(path);
-            }
-            catch (FileNotFoundException)
-            {
-                _extent.Clear();
-                return false;
-            }
-
-            XmlSerializer xmlSerializer = new XmlSerializer(typeof(List<Road>));
-            using (XmlTextReader reader = new XmlTextReader(file))
-            {
-                try
-                {
-                    _extent = (List<Road>)xmlSerializer.Deserialize(reader);
-                }
-                catch (Exception)
-                {
-                    _extent.Clear();
-                    return false;
-                }
-            }
-            return true;
+            return Serializer.Load(path,  _extent);
         }
     }
 }
