@@ -1,7 +1,7 @@
 using System.Reflection;
-using TestProject6.BYT_Pokemon.Models;
+using Models;
 
-namespace TestProject6.BYT_Pokemon.Test
+namespace Test
 {
     public class TrainerTest
     {
@@ -15,11 +15,7 @@ namespace TestProject6.BYT_Pokemon.Test
         [Test]
         public void Trainer_Attributes()
         {
-            var badges = new Badge[]
-            {
-                new Badge { Name = "BraveBadge", Color = "Orange" },
-                new Badge { Name = "WinnerBadge", Color = "Purple" }
-            };
+            var badges = new String[] { "Indigo", "Zephyr" };
 
             Trainer trainer = new Trainer
             {
@@ -44,52 +40,52 @@ namespace TestProject6.BYT_Pokemon.Test
 
             Assert.Throws<ArgumentOutOfRangeException>(() => trainer.TotalMoney = -1);
             Assert.Throws<ArgumentNullException>(() => trainer.Badges = null);
-            Assert.Throws<ArgumentException>(() => trainer.Badges = new Badge[] { null! });
+            Assert.Throws<ArgumentException>(() => trainer.Badges = new String[] { null! });
             Assert.Throws<ArgumentException>(() => trainer.Status = "Hello");
             Assert.Throws<ArgumentException>(() => trainer.Name = "");
             Assert.Throws<ArgumentOutOfRangeException>(() => trainer.Age = -1);
         }
 
-        [Test]
-        public void Trainer_Extent()
-        {
-            Trainer ivan1 = new Trainer { Name = "Ivan1" };
-            
-            var extent = Trainer.GetTrainers();
-            Assert.That(extent.Count, Is.EqualTo(1));
-            Assert.That(extent.First().Name, Is.EqualTo("Ivan1"));
-        }
+        // [Test]
+        // public void Trainer_Extent()
+        // {
+        //     Trainer ivan1 = new Trainer { Name = "Ivan1" };
+        //     
+        //     var extent = Trainer.GetTrainers();
+        //     Assert.That(extent.Count, Is.EqualTo(1));
+        //     Assert.That(extent.First().Name, Is.EqualTo("Ivan1"));
+        // }
 
-        [Test]
-        public void Trainer_Encapsulation()
-        {
-            Trainer trainer = new Trainer { Name = "Ivan2" };
+        // [Test]
+        // public void Trainer_Encapsulation()
+        // {
+        //     Trainer trainer = new Trainer { Name = "Ivan2" };
+        //
+        //     var extent = Trainer.GetTrainers();
+        //     trainer.Name = "Ivan22";
+        //
+        //     var updatedExtent = Trainer.GetTrainers();
+        //     Assert.That(updatedExtent.First().Name, Is.EqualTo("Ivan22"));
+        // }
 
-            var extent = Trainer.GetTrainers();
-            trainer.Name = "Ivan22";
-
-            var updatedExtent = Trainer.GetTrainers();
-            Assert.That(updatedExtent.First().Name, Is.EqualTo("Ivan22"));
-        }
-
-        [Test]
-        public void Trainer_Persistence()
-        {
-            string path = "trainer_test.xml";
-            if (File.Exists(path)) File.Delete(path);
-
-            Trainer ivan = new Trainer { Name = "Ivan" };
-            Trainer ivan2 = new Trainer { Name = "Ivan2" };
-
-            Trainer.Save(path);
-            var field = typeof(Trainer).GetField("_extent", BindingFlags.Static | BindingFlags.NonPublic);
-            field.SetValue(null, new List<Trainer>());
-            bool loadSuccess = Trainer.Load(path);
-            Assert.IsTrue(loadSuccess, "Load should return true");
-            var loadedExtent = Trainer.GetTrainers();
-            Assert.That(loadedExtent.Count, Is.EqualTo(2));
-            Assert.That(loadedExtent.Any(t => t.Name == "Ivan"), Is.True);
-            Assert.That(loadedExtent.Any(t => t.Name == "Ivan2"), Is.True);
-        }
+        // [Test]
+        // public void Trainer_Persistence()
+        // {
+        //     string path = "trainer_test.xml";
+        //     if (File.Exists(path)) File.Delete(path);
+        //
+        //     Trainer ivan = new Trainer { Name = "Ivan" };
+        //     Trainer ivan2 = new Trainer { Name = "Ivan2" };
+        //
+        //     Trainer.Save(path);
+        //     var field = typeof(Trainer).GetField("_extent", BindingFlags.Static | BindingFlags.NonPublic);
+        //     field.SetValue(null, new List<Trainer>());
+        //     bool loadSuccess = Trainer.Load(path);
+        //     Assert.IsTrue(loadSuccess, "Load should return true");
+        //     var loadedExtent = Trainer.GetTrainers();
+        //     Assert.That(loadedExtent.Count, Is.EqualTo(2));
+        //     Assert.That(loadedExtent.Any(t => t.Name == "Ivan"), Is.True);
+        //     Assert.That(loadedExtent.Any(t => t.Name == "Ivan2"), Is.True);
+        // }
     }
 }

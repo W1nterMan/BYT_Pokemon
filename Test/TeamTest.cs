@@ -1,7 +1,7 @@
 using System.Reflection;
-using TestProject6.BYT_Pokemon.Models;
+using Models;
 
-namespace TestProject6.BYT_Pokemon.Test
+namespace Test
 {
     public class TeamTest
     {

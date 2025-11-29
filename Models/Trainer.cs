@@ -1,24 +1,21 @@
 using Models;
-using TestProject3.Models;
 
-namespace TestProject6.BYT_Pokemon.Models;
-
+namespace Models;
 
 [Serializable]
 public class Trainer : Person
 {
-    private static List<Trainer> _extent = new List<Trainer>();
     private int _totalMoney;
-    private Badge[] _badges = Array.Empty<Badge>();
-    private string? _status;
+    private string[] _badges = Array.Empty<string>();
+    private string _status;
 
-    public Badge[] Badges
+    public string[] Badges
     {
         get => _badges;
         set
         {
             if (value == null) throw new ArgumentNullException(nameof(Badges));
-            if (value.Any(b => b == null)) throw new ArgumentException("Badge can not be null.");
+            if (value.Any(b => string.IsNullOrWhiteSpace(b))) throw new ArgumentException("Badge can not be empty or null.");
             _badges = value;
         }
     }
@@ -33,65 +30,33 @@ public class Trainer : Person
         }
     }
 
-    public string? Status
+    public string Status
     {
         get => _status;
         set
         {
-            if (!string.IsNullOrEmpty(value) &&
-                !(value.Equals(nameof(TrainerStatus.Active)) || value.Equals(nameof(TrainerStatus.Retired))))
+            if (string.IsNullOrWhiteSpace(value) || !Enum.IsDefined(typeof(TrainerStatus),value))
             {
-                throw new ArgumentException("Status must be Active or Defeated.");
+                throw new ArgumentException("Invalid status.");
             }
             _status = value;
         }
     }
+    
+    public Trainer() { }
 
-    //TODO: redo
-    public Trainer()
-    {
-        AddTrainer(this);
-    }
-
-    public Trainer(int totalMoney, Badge[] badges, string? status, string name, int age)
+    public Trainer(int totalMoney, string[] badges, string? status, string name, int age) : base(name,age)
     {
         TotalMoney = totalMoney;
         Badges = badges;
         Status = status;
-        Name = name;
-        Age = age;
-        AddTrainer(this);
-    }
-    
-    private static void AddTrainer(Trainer trainer)
-    {
-        if (trainer == null)
-        {
-            throw new ArgumentException("Trainer cannot be null.");
-        }
-        _extent.Add(trainer);
     }
 
-    public static List<Trainer> GetTrainers()
-    {
-        return _extent;
-    }
-
-    public new static void Save(string path = "trainers.xml")
-    {
-        Serializer.Save(path, _extent);
-    }
-
-    public new static bool Load(string path = "trainers.xml")
-    {
-        return Serializer.Load(path, _extent);
-    }
-
-    public void Move() {}
-    public void ChangeActivePokemon() {}
-    public void ChallengeTrainer(Trainer opponent) {}
-    public void SwitchAvailability() {}
-    public void Retire() {}
+    // public void Move() {}
+    // public void ChangeActivePokemon() {}
+    // public void ChallengeTrainer(Trainer opponent) {}
+    // public void SwitchAvailability() {}
+    // public void Retire() {}
 }
 
 public enum TrainerStatus

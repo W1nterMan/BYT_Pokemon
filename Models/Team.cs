@@ -1,6 +1,6 @@
 using Models;
 
-namespace TestProject6.BYT_Pokemon.Models;
+namespace Models;
 
 [Serializable]
 public class Team
@@ -17,13 +17,8 @@ public class Team
             _name = value;
         }
     }
-
-
-    public Team()
-    {
-        AddTeam(this);
-    }
-
+    
+    public Team() { }
 
     public Team(string name)
     {
@@ -42,7 +37,7 @@ public class Team
 
     public static List<Team> GetTeams()
     {
-        return _extent;
+        return new List<Team>(_extent);
     }
 
     public static void Save(string path = "teams.xml")
@@ -54,7 +49,6 @@ public class Team
     {
         return Serializer.Load(path, _extent);
     }
-    public void AddTeamMember(Trainer trainer)
-    {
-    }
+    
+    //public void AddTeamMember(Trainer trainer) { }
 }

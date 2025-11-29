@@ -1,25 +1,35 @@
 using Models;
-using TestProject3.Models;
 
-
-namespace TestProject6.BYT_Pokemon.Models;
+namespace Models;
 
 [Serializable]
 public class Battle
 {
-    //TODO:enum
     private static List<Battle> _extent = new List<Battle>();
-    private string _status = "Ongoing";
+    private string _status;
     private int _battleXp;
     private int _moneyIncome;
+    private DateTime _time;
 
-    public string? Status
+    public DateTime Time
+    {
+        get => _time;
+        set
+        {
+            if (value < DateTime.Now)
+            {
+                throw new ArgumentException("Time cannot be in the past");
+            }
+            _time = value;
+        }
+    }
+    
+    public string Status
     {
         get => _status;
         set
         {
-            if (!string.IsNullOrEmpty(value) &&
-                !(value.Equals(nameof(BattleStatus.Ongoing)) || value.Equals(nameof(BattleStatus.Finished))))
+            if (string.IsNullOrEmpty(value) || !Enum.IsDefined(typeof(BattleStatus),value))
             {
                 throw new ArgumentException("Invalid status value.");
             }
@@ -49,16 +59,14 @@ public class Battle
 
     public Trainer? Winner { get; set; }
 
-    public Battle()
-    {
-        AddBattle(this);
-    }
+    public Battle() { }
     
-    public Battle(string? status, int battleXp, int moneyIncome, Trainer? winner)
+    public Battle(string status, int battleXp, int moneyIncome, DateTime time, Trainer? winner)
     {
         Status = status;
         BattleXp = battleXp;
         MoneyIncome = moneyIncome;
+        Time = time;
         Winner = winner;
         AddBattle(this);
     }
@@ -72,7 +80,7 @@ public class Battle
     
     public static List<Battle> GetBattles()
     {
-        return _extent;
+        return new List<Battle>(_extent);;
     }
 
     public static void Save(string path = "battles.xml")
@@ -90,6 +98,7 @@ public class Battle
 
 public enum BattleStatus
 {
+    Planned,
     Ongoing,
     Finished
 }

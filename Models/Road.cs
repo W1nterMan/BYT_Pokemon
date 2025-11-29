@@ -61,3 +61,10 @@ namespace Models
         }
     }
 }
+
+public enum TerrainType
+{
+    Field,
+    Cave,
+    Mountains
+}

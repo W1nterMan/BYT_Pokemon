@@ -20,7 +20,7 @@ namespace Models
         {
             Name = name;
             IsAccessible = isAccessible;
-            addBuilding(this);
+            AddBuilding(this);
         }
         
         public string Name
@@ -42,7 +42,7 @@ namespace Models
             set => _isAccessible = value;
         }
         
-        private static void addBuilding(Building building)
+        private static void AddBuilding(Building building)
         {
             if (building == null) 
             {
@@ -56,12 +56,12 @@ namespace Models
             return new List<Building>(_extent);
         }
         
-        public static void save(string path = "buildings.xml")
+        public static void Save(string path = "buildings.xml")
         {
             Serializer.Save(path, _extent);
         }
         
-        public static bool load(string path = "buildings.xml")
+        public static bool Load(string path = "buildings.xml")
         {
             return Serializer.Load(path,  _extent);
         }

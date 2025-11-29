@@ -1,9 +1,13 @@
 using System.Xml;
 using System.Xml.Serialization;
 using Models;
+using TestProject6.BYT_Pokemon.Models;
 
-namespace TestProject3.Models;
+namespace Models;
 
+[XmlInclude(typeof(Trainer))]
+[XmlInclude(typeof(Nurse))]
+[XmlInclude(typeof(Leader))]
 [Serializable]
 public abstract class Person
 {
@@ -17,7 +21,7 @@ public abstract class Person
         set
         {
             if (string.IsNullOrWhiteSpace(value))
-                throw new ArgumentException("Name can not be empty.");
+                throw new ArgumentException("Name can not be empty or whitespaces.");
             _name = value;
         }
     }
@@ -27,7 +31,7 @@ public abstract class Person
         get => _age;
         set
         {
-            if (value < 0) throw new ArgumentOutOfRangeException(nameof(Age), "Age can not be empty.");
+            if (value < 0) throw new ArgumentOutOfRangeException(nameof(Age), "Age can not be negative or zero.");
             _age = value;
         }
     }
@@ -50,7 +54,7 @@ public abstract class Person
 
     public static List<Person> GetPersons()
     {
-        return _extent;
+        return new List<Person>(_extent);
     }
 
     public static void Save(string path = "persons.xml")

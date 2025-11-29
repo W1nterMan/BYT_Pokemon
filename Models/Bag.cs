@@ -1,4 +1,4 @@
-namespace TestProject6.BYT_Pokemon.Models;
+namespace Models;
 
 public class Bag
 {

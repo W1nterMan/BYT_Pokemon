@@ -1,7 +1,7 @@
 using System.Reflection;
-using TestProject6.BYT_Pokemon.Models;
+using Models;
 
-namespace TestProject6.BYT_Pokemon.Test
+namespace Test
 {
     public class BattleTest
     {
@@ -16,11 +16,12 @@ namespace TestProject6.BYT_Pokemon.Test
         public void Battle_Attributes()
         {
             Trainer winner = new Trainer { Name = "Winner" };
-            Battle battle = new Battle("Ongoing", 10, 10, winner);
+            Battle battle = new Battle("Ongoing", 10, 10,new DateTime(2025, 11, 30, 16, 49, 58, 815),  winner);
 
             Assert.That(battle.Status, Is.EqualTo("Ongoing"));
             Assert.That(battle.BattleXp, Is.EqualTo(10));
             Assert.That(battle.MoneyIncome, Is.EqualTo(10));
+            Assert.That(battle.Time,Is.EqualTo(new DateTime(2025, 11, 30, 16, 49, 58, 815)));
             Assert.That(battle.Winner, Is.EqualTo(winner));
         }
 
@@ -36,7 +37,8 @@ namespace TestProject6.BYT_Pokemon.Test
         [Test]
         public void Battle_Extent()
         {
-            Battle battle = new Battle("Ongoing", 10, 10, null);
+            Trainer winner = new Trainer { Name = "Winner" };
+            Battle battle = new Battle("Ongoing", 10, 10,DateTime.Now.AddDays(1),  winner);
             var extent = Battle.GetBattles();
 
             Assert.That(extent.Count, Is.EqualTo(1));
@@ -46,7 +48,8 @@ namespace TestProject6.BYT_Pokemon.Test
         [Test]
         public void Battle_Encapsulation()
         {
-            Battle battle = new Battle("Ongoing", 10, 10, null);
+            Trainer winner = new Trainer { Name = "Winner" };
+            Battle battle = new Battle("Ongoing", 10, 10,DateTime.Now.AddDays(1),  winner);
             var extent = Battle.GetBattles();
 
             Assert.That(extent.First().BattleXp, Is.EqualTo(10));
@@ -68,8 +71,8 @@ namespace TestProject6.BYT_Pokemon.Test
             string path = "battle_test.xml";
             if (File.Exists(path)) File.Delete(path);
 
-            Battle battle1 = new Battle("Ongoing", 10, 10, null);
-            Battle battle2 = new Battle("Finished", 11, 11, null);
+            Battle battle1 = new Battle("Ongoing", 10, 10,DateTime.Now.AddDays(1), null);
+            Battle battle2 = new Battle("Finished", 11, 11,DateTime.Now.AddDays(1), null);
 
             Battle.Save(path);
 
