@@ -50,14 +50,21 @@ namespace Models
         
         public static List<Road> GetExtent() => new List<Road>(_extent);
         
-        public static void save(string path = "roads.xml")
+        public static void Save(string path = "roads.xml")
         {
             Serializer.Save(path, _extent);
         }
         
-        public static bool load(string path = "roads.xml")
+        public static bool Load(string path = "roads.xml")
         {
-            return Serializer.Load(path,  _extent);
+            var loadedList = Serializer.Load(path, _extent);
+        
+            if (loadedList != null)
+            {
+                _extent = loadedList;
+                return true;
+            }
+            return false;
         }
     }
 }

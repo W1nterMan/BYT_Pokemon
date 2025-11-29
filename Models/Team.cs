@@ -47,7 +47,14 @@ public class Team
 
     public static bool Load(string path = "teams.xml")
     {
-        return Serializer.Load(path, _extent);
+        var loadedList = Serializer.Load(path, _extent);
+        
+        if (loadedList != null)
+        {
+            _extent = loadedList;
+            return true;
+        }
+        return false;
     }
     
     //public void AddTeamMember(Trainer trainer) { }

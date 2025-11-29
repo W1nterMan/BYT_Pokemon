@@ -69,7 +69,7 @@ public class PokemonInBag
     }
     
     
-    public static void save(string path = "pokemons_in_bag.xml")
+    public static void Save(string path = "pokemons_in_bag.xml")
     {
         StreamWriter file = File.CreateText(path);
         XmlSerializer xmlSerializer = new XmlSerializer(typeof(List<PokemonInBag>)); 
@@ -79,7 +79,7 @@ public class PokemonInBag
         }
     }
     
-    public static bool load(string path = "pokemons_in_bag.xml")
+    public static bool Load(string path = "pokemons_in_bag.xml")
     {
         StreamReader file;
         try

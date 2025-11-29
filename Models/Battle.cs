@@ -1,4 +1,4 @@
-using Models;
+﻿using Models;
 
 namespace Models;
 
@@ -90,7 +90,14 @@ public class Battle
 
     public static bool Load(string path = "battles.xml")
     {
-        return Serializer.Load(path, _extent);
+        var loadedList = Serializer.Load(path, _extent);
+        
+        if (loadedList != null)
+        {
+            _extent = loadedList;
+            return true;
+        }
+        return false;
     }
     
 }
