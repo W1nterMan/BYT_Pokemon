@@ -16,12 +16,12 @@ namespace Test
         public void Battle_Attributes()
         {
             Trainer winner = new Trainer { Name = "Winner" };
-            Battle battle = new Battle("Ongoing", 10, 10,new DateTime(2025, 11, 30, 16, 49, 58, 815),  winner);
+            Battle battle = new Battle("Ongoing", 10, 10,new DateTime(2036, 11, 30, 16, 49, 58, 815),  winner);
 
             Assert.That(battle.Status, Is.EqualTo("Ongoing"));
             Assert.That(battle.BattleXp, Is.EqualTo(10));
             Assert.That(battle.MoneyIncome, Is.EqualTo(10));
-            Assert.That(battle.Time,Is.EqualTo(new DateTime(2025, 11, 30, 16, 49, 58, 815)));
+            Assert.That(battle.Time,Is.EqualTo(new DateTime(2036, 11, 30, 16, 49, 58, 815)));
             Assert.That(battle.Winner, Is.EqualTo(winner));
         }
 
