@@ -26,7 +26,8 @@ public class Serializer
         serializer.Serialize(writer,extent);
     }
 
-    public static bool Load<T>(string path,  List<T> extent)
+    //now reterns extent and not bool
+    public static List<T> Load<T>(string path,  List<T> extent)
     {
         // Pokemon <- bin <- debug <- net8.0 (3 .. needed to go up for solution)
         string solutionDir = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", ".."));
@@ -37,7 +38,7 @@ public class Serializer
 
         if (!File.Exists(filePath))
         {
-            return false;
+            return null;
         }
 
         try
@@ -48,12 +49,12 @@ public class Serializer
             using var reader = new XmlTextReader(file);
 
             extent = (List<T>)serializer.Deserialize(reader);
-            return true;
+            return extent;
         }
         catch (Exception e)
         {
             extent.Clear();
-            return false;
+            return null;
         }
     }
 }

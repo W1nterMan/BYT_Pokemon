@@ -152,7 +152,14 @@ public class Pokemon
 
     public static bool Load(string path = "pokemons.xml")
     {
-        return Serializer.Load(path,  _extent);
+        var loadedList = Serializer.Load(path, _extent);
+        
+        if (loadedList != null)
+        {
+            _extent = loadedList;
+            return true;
+        }
+        return false;
     }
     
 }

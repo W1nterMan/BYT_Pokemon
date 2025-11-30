@@ -53,14 +53,28 @@ namespace Models
 
         public static List<Location> GetExtent() => new List<Location>(_extent);
         
-        public static void save(string path = "locations.xml")
+        public static void Save(string path = "locations.xml")
         {
             Serializer.Save(path, _extent);
         }
 
-        public static bool load(string path = "locations.xml")
+        public static bool Load(string path = "locations.xml")
         {
-            return Serializer.Load(path,  _extent);
+            var loadedList = Serializer.Load(path, _extent);
+        
+            if (loadedList != null)
+            {
+                _extent = loadedList;
+                return true;
+            }
+            return false;
         }
     }
+}
+
+public enum LocationType
+{
+    City,
+    Village,
+    Town
 }

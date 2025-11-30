@@ -82,7 +82,7 @@ public class Nature
         return _extent;
     }
 
-    public static void save(string path = "natures.xml")
+    public static void Save(string path = "natures.xml")
     {
         StreamWriter file = File.CreateText(path);
         XmlSerializer xmlSerializer = new XmlSerializer(typeof(List<Nature>)); 
@@ -92,7 +92,7 @@ public class Nature
         }
     }
     
-    public static bool load(string path = "natures.xml")
+    public static bool Load(string path = "natures.xml")
     {
         StreamReader file;
         try

@@ -15,9 +15,9 @@ public class LocationTest
         
         Assert.IsTrue(Location.GetExtent().Count >= 2);
         
-        Location.save(testPath);
-        
-        bool loaded = Location.load(testPath);
+        Location.Save(testPath);
+
+        bool loaded = Location.Load(testPath);
         
         Assert.IsTrue(loaded);
         
