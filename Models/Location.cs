@@ -69,6 +69,59 @@ namespace Models
             }
             return false;
         }
+
+        private HashSet<Road> _roads = new HashSet<Road>();
+        
+        public HashSet<Road> GetLocationRoads() => new HashSet<Road>(_roads);
+
+        public void AddRoad(Road road)
+        {
+            if (_roads.Contains(road))
+            {
+                return;
+            }
+            
+            bool added = false;
+            
+            try
+            {
+                _roads.Add(road);
+                added = true;
+                road.AddLocation(this);
+            }
+            catch (Exception e)
+            {
+                if (added)
+                {
+                    _roads.Remove(road);
+                }
+            }
+            
+        }
+
+        public void RemoveRoad(Road road)
+        {
+            if (!_roads.Contains(road))
+            {
+                return;
+            }
+            
+            bool removed = false;
+            
+            try
+            {
+                _roads.Remove(road);
+                removed = true;
+                road.RemoveLocation(this);
+            }
+            catch (Exception e)
+            {
+                if (removed)
+                {
+                    _roads.Add(road);
+                }
+            }
+        }
     }
 }
 
