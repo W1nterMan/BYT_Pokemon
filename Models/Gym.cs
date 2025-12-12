@@ -6,8 +6,8 @@ namespace Models
     public class Gym : Building
     {
         private string _leader;
-        
-        private string _badgeName { get; set; }
+
+        private string _badgeName;
         public string BadgeName
         {
             get => _badgeName;
@@ -43,7 +43,7 @@ namespace Models
 
         public Gym(string badgeName, bool isAccessible, string leader) : base(badgeName, isAccessible)
         {
-            Leader = leader; //than why leader is not in base() too? -> building doesnt have a field leader. So we cant set it in base
+            Leader = leader;
         }
     }
 }

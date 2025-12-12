@@ -59,11 +59,9 @@ public class PokemonInBagTest
         var initialExtent = PokemonInBag.GetPokemonsInBag();
         Assert.That(initialExtent.Count, Is.EqualTo(2));
         
-        PokemonInBag.save(TestPath);
-        
-        Assert.IsTrue(File.Exists(TestPath), "File should be created in bin folder");
-        
-        bool loadSuccess = PokemonInBag.load(TestPath);
+        PokemonInBag.Save(TestPath);
+
+        bool loadSuccess = PokemonInBag.Load(TestPath);
         
         Assert.IsTrue(loadSuccess, "Load should return true");
         

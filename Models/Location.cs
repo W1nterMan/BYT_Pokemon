@@ -53,29 +53,28 @@ namespace Models
 
         public static List<Location> GetExtent() => new List<Location>(_extent);
         
-        public static void save(string path = "locations.xml")
+        public static void Save(string path = "locations.xml")
         {
-            StreamWriter file = File.CreateText(path);
-            XmlSerializer xmlSerializer = new XmlSerializer(typeof(List<Location>));
-            using (XmlTextWriter writer = new XmlTextWriter(file))
-            {
-                xmlSerializer.Serialize(writer, _extent);
-            }
+            Serializer.Save(path, _extent);
         }
 
-        public static bool load(string path = "locations.xml")
+        public static bool Load(string path = "locations.xml")
         {
-            StreamReader file;
-            try { file = File.OpenText(path); }
-            catch (FileNotFoundException) { _extent.Clear(); return false; }
-
-            XmlSerializer xmlSerializer = new XmlSerializer(typeof(List<Location>));
-            using (XmlTextReader reader = new XmlTextReader(file))
+            var loadedList = Serializer.Load(path, _extent);
+        
+            if (loadedList != null)
             {
-                try { _extent = (List<Location>)xmlSerializer.Deserialize(reader); }
-                catch (Exception) { _extent.Clear(); return false; }
+                _extent = loadedList;
+                return true;
             }
-            return true;
+            return false;
         }
     }
+}
+
+public enum LocationType
+{
+    City,
+    Village,
+    Town
 }

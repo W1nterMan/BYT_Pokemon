@@ -1,25 +1,66 @@
-﻿namespace Models;
+using Models;
 
-public class Trainer
+namespace Models;
+
+[Serializable]
+public class Trainer : Person
 {
-    public int Id { get; set; }
-    public Badge[] Badges { get; set; }
-    public int TotalMoney { get; set; }
-    public string Status { get; set; }      //i dont remember why we needed this :P
+    private int _totalMoney;
+    private string[] _badges = Array.Empty<string>();
+    private string _status;
 
-    public ICollection<Battle>? Type { get; set; }
-    
-    public ICollection<PokemonInBag> PokemonsInBag { get; set; }    //can change to ireadonlylist<>, TODO:0..6 limit in methods check.
-
-    public Trainer()
+    public string[] Badges
     {
-        //constructor...
+        get => _badges;
+        set
+        {
+            if (value == null) throw new ArgumentNullException(nameof(Badges));
+            if (value.Any(b => string.IsNullOrWhiteSpace(b))) throw new ArgumentException("Badge can not be empty or null.");
+            _badges = value;
+        }
     }
+
+    public int TotalMoney
+    {
+        get => _totalMoney;
+        set
+        {
+            if (value < 0) throw new ArgumentOutOfRangeException(nameof(TotalMoney), "Money cannot be negative.");
+            _totalMoney = value;
+        }
+    }
+
+    public string Status
+    {
+        get => _status;
+        set
+        {
+            if (string.IsNullOrWhiteSpace(value) || !Enum.IsDefined(typeof(TrainerStatus),value))
+            {
+                throw new ArgumentException("Invalid status.");
+            }
+            _status = value;
+        }
+    }
+    
+    public Trainer() { }
+
+    public Trainer(int totalMoney, string[] badges, string? status, string name, int age) : base(name,age)
+    {
+        TotalMoney = totalMoney;
+        Badges = badges;
+        Status = status;
+    }
+
+    // public void Move() {}
+    // public void ChangeActivePokemon() {}
+    // public void ChallengeTrainer(Trainer opponent) {}
+    // public void SwitchAvailability() {}
+    // public void Retire() {}
 }
 
-public class Badge
+public enum TrainerStatus
 {
-    //complex attribute(?)
-    public string Name { get; set; }
-    public string Color { get; set; }
+    Active,
+    Retired
 }

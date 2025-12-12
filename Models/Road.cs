@@ -50,43 +50,28 @@ namespace Models
         
         public static List<Road> GetExtent() => new List<Road>(_extent);
         
-        public static void save(string path = "roads.xml")
+        public static void Save(string path = "roads.xml")
         {
-            StreamWriter file = File.CreateText(path);
-            XmlSerializer xmlSerializer = new XmlSerializer(typeof(List<Road>));
-            using (XmlTextWriter writer = new XmlTextWriter(file))
-            {
-                xmlSerializer.Serialize(writer, _extent);
-            }
+            Serializer.Save(path, _extent);
         }
         
-        public static bool load(string path = "roads.xml")
+        public static bool Load(string path = "roads.xml")
         {
-            StreamReader file;
-            try
+            var loadedList = Serializer.Load(path, _extent);
+        
+            if (loadedList != null)
             {
-                file = File.OpenText(path);
+                _extent = loadedList;
+                return true;
             }
-            catch (FileNotFoundException)
-            {
-                _extent.Clear();
-                return false;
-            }
-
-            XmlSerializer xmlSerializer = new XmlSerializer(typeof(List<Road>));
-            using (XmlTextReader reader = new XmlTextReader(file))
-            {
-                try
-                {
-                    _extent = (List<Road>)xmlSerializer.Deserialize(reader);
-                }
-                catch (Exception)
-                {
-                    _extent.Clear();
-                    return false;
-                }
-            }
-            return true;
+            return false;
         }
     }
+}
+
+public enum TerrainType
+{
+    Field,
+    Cave,
+    Mountains
 }

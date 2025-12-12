@@ -149,48 +149,21 @@ public class Pokemon
         return _extent;
     }
 
-    public static void save(string path = "pokemons.xml")
+    public static void Save(string path = "pokemons.xml")
     {
-        StreamWriter file = File.CreateText(path);
-        XmlSerializer xmlSerializer = new XmlSerializer(typeof(List<Pokemon>)); 
-        using (XmlTextWriter writer = new XmlTextWriter(file)) 
-        {
-            xmlSerializer.Serialize(writer, _extent); 
-        }
+        Serializer.Save(path, _extent);
     }
-    
-    public static bool load(string path = "pokemons.xml")
-    {
-        StreamReader file;
-        try
-        {
-            file = File.OpenText(path);
-        }
-        catch (FileNotFoundException)
-        {
-            _extent.Clear();
-            return false;    
-        }
 
-        XmlSerializer xmlSerializer = new XmlSerializer(typeof(List<Pokemon>));
-        using (XmlTextReader reader = new XmlTextReader(file))
+    public static bool Load(string path = "pokemons.xml")
+    {
+        var loadedList = Serializer.Load(path, _extent);
+        
+        if (loadedList != null)
         {
-            try
-            {
-                _extent = (List<Pokemon>)xmlSerializer.Deserialize(reader);
-            }
-            catch (InvalidCastException)
-            {
-                _extent.Clear();
-                return false;   
-            }
-            catch (Exception)
-            {
-                _extent.Clear();
-                return false;   
-            }
+            _extent = loadedList;
+            return true;
         }
-        return true; 
+        return false;
     }
     
 }

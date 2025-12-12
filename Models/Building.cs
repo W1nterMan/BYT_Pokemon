@@ -20,7 +20,7 @@ namespace Models
         {
             Name = name;
             IsAccessible = isAccessible;
-            addBuilding(this);
+            AddBuilding(this);
         }
         
         public string Name
@@ -42,7 +42,7 @@ namespace Models
             set => _isAccessible = value;
         }
         
-        private static void addBuilding(Building building)
+        private static void AddBuilding(Building building)
         {
             if (building == null) 
             {
@@ -56,48 +56,21 @@ namespace Models
             return new List<Building>(_extent);
         }
         
-        public static void save(string path = "buildings.xml")
+        public static void Save(string path = "buildings.xml")
         {
-            StreamWriter file = File.CreateText(path);
-            XmlSerializer xmlSerializer = new XmlSerializer(typeof(List<Building>)); 
-            using (XmlTextWriter writer = new XmlTextWriter(file)) 
-            {
-                xmlSerializer.Serialize(writer, _extent); 
-            }
+            Serializer.Save(path, _extent);
         }
         
-        public static bool load(string path = "buildings.xml")
+        public static bool Load(string path = "buildings.xml")
         {
-            StreamReader file;
-            try
+            var loadedList = Serializer.Load(path, _extent);
+        
+            if (loadedList != null)
             {
-                file = File.OpenText(path);
+                _extent = loadedList;
+                return true;
             }
-            catch (FileNotFoundException)
-            {
-                _extent.Clear();
-                return false;    
-            }
-
-            XmlSerializer xmlSerializer = new XmlSerializer(typeof(List<Building>));
-            using (XmlTextReader reader = new XmlTextReader(file))
-            {
-                try
-                {
-                    _extent = (List<Building>)xmlSerializer.Deserialize(reader);
-                }
-                catch (InvalidCastException)
-                {
-                    _extent.Clear();
-                    return false;   
-                }
-                catch (Exception)
-                {
-                    _extent.Clear();
-                    return false;   
-                }
-            }
-            return true; 
+            return false;
         }
     }
 }

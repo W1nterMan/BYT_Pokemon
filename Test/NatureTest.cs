@@ -71,11 +71,9 @@ public class NatureTest
         var initialExtent = Nature.GetNatures();
         Assert.That(initialExtent.Count, Is.EqualTo(2));
         
-        Nature.save(TestPath);
+        Nature.Save(TestPath);
         
-        Assert.IsTrue(File.Exists(TestPath), "File should be created in bin folder");
-        
-        bool loadSuccess = Nature.load(TestPath);
+        bool loadSuccess = Nature.Load(TestPath);
         
         Assert.IsTrue(loadSuccess, "Load should return true");
         
