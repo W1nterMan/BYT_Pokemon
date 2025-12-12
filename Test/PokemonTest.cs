@@ -23,12 +23,6 @@ public class PokemonTest
         new object[] { 1, "pokemonA", 100, 100, 100, new[] { 1, 1, 1, 1, 1 }, _nature },
     };
     
-    /*[TestCase(0,"pokemonA",100,100,100,new []{1,1,1,1,1,1}, _nature)]
-    [TestCase(1,"",100,100,100,new []{1,1,1,1,1,1},new Nature("Brave",1,2))]
-    [TestCase(1,"pokemonA",-1,100,100,new []{1,1,1,1,1,1})]
-    [TestCase(1,"pokemonA",100,-1,100,new []{1,1,1,1,1,1})]
-    [TestCase(1,"pokemonA",100,100,0,new []{1,1,1,1,1,1})]
-    [TestCase(1,"pokemonA",100,100,100,new []{1,1,1,1,1})]*/
    [TestCaseSource(nameof(_testcases))]
     public void Pokemon_Invalid_Argument_ThrowException
     (int id, string name,int healthPoints,
@@ -37,18 +31,6 @@ public class PokemonTest
         Assert.Throws<ArgumentException>(()=>new Pokemon(id,name,healthPoints,expPoints,weight,baseStats,nature));
     }
     
-    /*[Test]
-    public void Pokemon_Nullable_EvolvesTo_Test()
-    {
-        Pokemon pokemonA=new Pokemon(
-            1,"pokemonA",100,100,100,[1,1,1,1,1,1]);
-        Pokemon pokemonB=new Pokemon(
-            1,"pokemonB",100,100,100,[1,1,1,1,1,1]);
-        Assert.IsNull(pokemonA.EvolvesTo);
-        pokemonA.EvolvesTo = pokemonB;
-        Assert.IsNotNull(pokemonA.EvolvesTo);
-    }*/
-
     [Test]
     public void Pokemon_Nullable_Status_Test()
     {

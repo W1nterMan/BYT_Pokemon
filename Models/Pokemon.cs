@@ -19,7 +19,8 @@ public class Pokemon
     private double _weight;
     private int[] _baseStats = new int[6]; // <-- [hp,attack,defence,sp.atk,sp.def,speed]
     private string? _status; //can be "","Active","Defeated"
-    
+    private Pokemon? _evolvesTo;
+    private HashSet<PokemonInBag>  _pokemonsInBag=new HashSet<PokemonInBag>();
 
     public int Id
     {
@@ -110,12 +111,20 @@ public class Pokemon
 
             _status = value;
         }
-    } 
+    }
 
-    //public Pokemon? EvolvesTo { get; set; }
-    
-    //comment out at current step
-    //public PokemonInBag? PokemonInBag { get; set; }
+    public Pokemon? EvolvesTo
+    {
+        get => _evolvesTo;
+        set
+        {
+            if (value != null && value._id == _id)
+            {
+                throw new ArgumentException("Same pokemon cannot be specified to evolution target");
+            }
+            _evolvesTo = value;
+        }
+    }
     
     public Nature Nature { get;  }
     
@@ -164,6 +173,54 @@ public class Pokemon
             return true;
         }
         return false;
+    }
+    
+    public HashSet<PokemonInBag> GetPokemonsInBag()=>new HashSet<PokemonInBag>(_pokemonsInBag);
+
+    public void AddPokemonToBag(PokemonInBag pokemonInBag)
+    {
+        if (_pokemonsInBag.Contains(pokemonInBag))
+        {
+            return;
+        }
+            
+        bool added = false;
+            
+        try
+        {
+            _pokemonsInBag.Add(pokemonInBag);
+            added = true;
+        }
+        catch (Exception e)
+        {
+            if (added)
+            {
+                _pokemonsInBag.Remove(pokemonInBag);
+            }
+        }
+    }
+    
+    public void RemoveFromBag(PokemonInBag pokemonInBag)
+    {
+        if (!_pokemonsInBag.Contains(pokemonInBag))
+        {
+            return;
+        }
+        
+        bool removed = false;
+            
+        try
+        {
+            _pokemonsInBag.Remove(pokemonInBag);
+            removed = true;
+        }
+        catch (Exception e)
+        {
+            if (removed)
+            {
+                _pokemonsInBag.Add(pokemonInBag);
+            }
+        }
     }
     
 }
