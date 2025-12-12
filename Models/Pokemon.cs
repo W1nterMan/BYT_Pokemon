@@ -200,7 +200,7 @@ public class Pokemon
         }
     }
     
-    public void RemoveFromBag(PokemonInBag pokemonInBag)
+    public void RemovePokemonFromBag(PokemonInBag pokemonInBag)
     {
         if (!_pokemonsInBag.Contains(pokemonInBag))
         {

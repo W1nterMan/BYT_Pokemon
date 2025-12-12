@@ -55,7 +55,7 @@ public class PokemonInBag
 
     public void RemovePokemonFromBag()
     {
-        _pokemon.RemoveFromBag(this);
+        _pokemon.RemovePokemonFromBag(this);
         _bag.TakePokemon(this);
     }
     
