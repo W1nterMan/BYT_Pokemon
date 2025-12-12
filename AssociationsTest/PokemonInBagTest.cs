@@ -38,4 +38,25 @@ public class PokemonInBagTest
         Assert.That(firePokemonA.GetPokemonsInBag().Count,Is.EqualTo(1));
         Assert.That(bagA.OpenBag().Count,Is.EqualTo(1));
     }
+
+    [Test]
+    public void Bag_Exceed_Pokemon_Limit_ThrowException_Test()
+    {
+        Nature calm = new Nature("Calm",0,3);
+        Fire firePokemon1 = new Fire(
+            1, "fireA", 100, 100, 100, [1, 1, 1, 1, 1, 1], calm, 100);
+        Bag bagA = new Bag();
+        
+        PokemonInBag p1_bagA=new PokemonInBag(firePokemon1, bagA,"Ultra ball");
+        PokemonInBag p2_bagA=new PokemonInBag(firePokemon1, bagA,"Ultra ball");
+        PokemonInBag p3_bagA=new PokemonInBag(firePokemon1, bagA,"Ultra ball");
+        PokemonInBag p4_bagA=new PokemonInBag(firePokemon1, bagA,"Ultra ball");
+        PokemonInBag p5_bagA=new PokemonInBag(firePokemon1, bagA,"Ultra ball");
+        PokemonInBag p6_bagA=new PokemonInBag(firePokemon1, bagA,"Ultra ball");
+        Assert.Throws<InvalidOperationException>(()=>
+            {
+                PokemonInBag p7_bagA = new PokemonInBag(firePokemon1, bagA, "Ultra ball");
+            }
+            );
+    }
 }
