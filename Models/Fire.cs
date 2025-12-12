@@ -20,8 +20,8 @@ public class Fire : Pokemon
     
     public Fire(){}
 
-    public Fire(int id, string name, int healthPoints, int expPoints, double weight, int[] baseStats, double bodyTemperature) :
-        base(id, name, healthPoints, expPoints, weight, baseStats)
+    public Fire(int id, string name, int healthPoints, int expPoints, double weight, int[] baseStats,Nature nature, double bodyTemperature) :
+        base(id, name, healthPoints, expPoints, weight, baseStats,nature)
     {
        BodyTemperature  =  bodyTemperature;
     }

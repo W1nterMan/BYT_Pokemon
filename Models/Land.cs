@@ -20,8 +20,8 @@ public class Land : Pokemon
 
     public Land(){}
     
-    public Land(int id, string name, int healthPoints, int expPoints, double weight, int[] baseStats, int autoHealPoint) :
-        base(id, name, healthPoints, expPoints, weight, baseStats)
+    public Land(int id, string name, int healthPoints, int expPoints, double weight, int[] baseStats,Nature nature, int autoHealPoint) :
+        base(id, name, healthPoints, expPoints, weight, baseStats,nature)
     {
         AutoHealPoint  =  autoHealPoint;
     }

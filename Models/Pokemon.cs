@@ -117,9 +117,11 @@ public class Pokemon
     //comment out at current step
     //public PokemonInBag? PokemonInBag { get; set; }
     
+    public Nature Nature { get;  }
+    
     public Pokemon(){}
     
-    public Pokemon(int id, string name, int healthPoints, int expPoints, double weight, int[] baseStats)
+    public Pokemon(int id, string name, int healthPoints, int expPoints, double weight, int[] baseStats, Nature nature)
     {
         //constructor...
         Id = id;
@@ -128,6 +130,8 @@ public class Pokemon
         ExpPoints = expPoints;
         Weight = weight;
         BaseStats = baseStats;
+        Nature=nature;
+        nature.AddPokemon(this);
         AddPokemon(this);
     }
 

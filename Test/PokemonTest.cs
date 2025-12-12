@@ -11,17 +11,30 @@ public class PokemonTest
         var field =typeof(Pokemon).GetField("_extent", BindingFlags.Static|BindingFlags.NonPublic);
         field.SetValue(null, new List<Pokemon>());
     }
-    [TestCase(0,"pokemonA",100,100,100,new []{1,1,1,1,1,1})]
-    [TestCase(1,"",100,100,100,new []{1,1,1,1,1,1})]
+
+    private static Nature _nature = new Nature("Brave", 1, 2);
+    private static object[] _testcases =
+    {
+        new object[] { 0, "pokemonA", 100, 100, 100, new[] { 1, 1, 1, 1, 1, 1 }, _nature },
+        new object[] { 1, "", 100, 100, 100, new[] { 1, 1, 1, 1, 1, 1 }, _nature },
+        new object[] { 1, "pokemonA", -1, 100, 100, new[] { 1, 1, 1, 1, 1, 1 }, _nature },
+        new object[] { 1, "pokemonA", 100, -1, 100, new[] { 1, 1, 1, 1, 1, 1 }, _nature },
+        new object[] { 1, "pokemonA", 100, 100, 0, new[] { 1, 1, 1, 1, 1, 1 }, _nature },
+        new object[] { 1, "pokemonA", 100, 100, 100, new[] { 1, 1, 1, 1, 1 }, _nature },
+    };
+    
+    /*[TestCase(0,"pokemonA",100,100,100,new []{1,1,1,1,1,1}, _nature)]
+    [TestCase(1,"",100,100,100,new []{1,1,1,1,1,1},new Nature("Brave",1,2))]
     [TestCase(1,"pokemonA",-1,100,100,new []{1,1,1,1,1,1})]
     [TestCase(1,"pokemonA",100,-1,100,new []{1,1,1,1,1,1})]
     [TestCase(1,"pokemonA",100,100,0,new []{1,1,1,1,1,1})]
-    [TestCase(1,"pokemonA",100,100,100,new []{1,1,1,1,1})]
+    [TestCase(1,"pokemonA",100,100,100,new []{1,1,1,1,1})]*/
+   [TestCaseSource(nameof(_testcases))]
     public void Pokemon_Invalid_Argument_ThrowException
     (int id, string name,int healthPoints,
-        int expPoints,double weight,int[] baseStats)
+        int expPoints,double weight,int[] baseStats,Nature nature)
     {
-        Assert.Throws<ArgumentException>(()=>new Pokemon(id,name,healthPoints,expPoints,weight,baseStats));
+        Assert.Throws<ArgumentException>(()=>new Pokemon(id,name,healthPoints,expPoints,weight,baseStats,nature));
     }
     
     /*[Test]
@@ -40,9 +53,9 @@ public class PokemonTest
     public void Pokemon_Nullable_Status_Test()
     {
         Pokemon pokemonA=new Pokemon(
-            1,"pokemonA",100,100,100,[1,1,1,1,1,1]);
+            1,"pokemonA",100,100,100,[1,1,1,1,1,1], _nature);
         Pokemon pokemonB=new Pokemon(
-            1,"pokemonB",100,100,100,[1,1,1,1,1,1]);
+            1,"pokemonB",100,100,100,[1,1,1,1,1,1], _nature);
         Assert.IsNull(pokemonA.Status);
         Assert.IsNull(pokemonB.Status);
         pokemonA.Status = nameof(StatusEnum.Active);
@@ -54,10 +67,10 @@ public class PokemonTest
     public void Fire_Pokemon_Valid_And_Invalid_Test()
     {
         Fire fireValid=new Fire(
-            1,"fireA",100,100,100,[1,1,1,1,1,1],100);
+            1,"fireA",100,100,100,[1,1,1,1,1,1], _nature, 100);
         Assert.Throws<ArgumentException>(() => 
             new Fire(
-                1, "fireB", 100, 100, 100, [1, 1, 1, 1, 1, 1], 0));
+                1, "fireB", 100, 100, 100, [1, 1, 1, 1, 1, 1], _nature, 0));
         Assert.That(fireValid.BodyTemperature, Is.EqualTo(100));
     }
     
@@ -65,10 +78,10 @@ public class PokemonTest
     public void Land_Pokemon_Valid_And_Invalid_Test()
     {
         Land landValid=new Land(
-            1,"landA",100,100,100,[1,1,1,1,1,1],100);
+            1,"landA",100,100,100,[1,1,1,1,1,1], _nature,100);
         Assert.Throws<ArgumentException>(() => 
             new Land(
-                1, "fireB", 100, 100, 100, [1, 1, 1, 1, 1, 1], -1));
+                1, "fireB", 100, 100, 100, [1, 1, 1, 1, 1, 1], _nature, -1));
         Assert.That(landValid.AutoHealPoint,Is.EqualTo(100));
     }
     
@@ -76,7 +89,7 @@ public class PokemonTest
     public void Underwater_Pokemon_StaticAttribute_IsShared()
     {
         Underwater pokemon1=new Underwater(
-            1,"underwaterA",100,100,100,[1,1,1,1,1,1]);
+            1,"underwaterA",100,100,100,[1,1,1,1,1,1], _nature);
         pokemon1.ExpPoints = (int)(Underwater.ExpBonusRate*pokemon1.ExpPoints);
         Assert.That(pokemon1.ExpPoints,Is.EqualTo(110));
     }
@@ -85,9 +98,9 @@ public class PokemonTest
     public void Pokemon_Extent_Test()
     {
         Fire firePokemon = new Fire(
-            1, "fireA", 100, 100, 100, [1, 1, 1, 1, 1, 1], 100);
+            1, "fireA", 100, 100, 100, [1, 1, 1, 1, 1, 1], _nature, 100);
         Water waterPokemon = new Water(
-            1, "waterA", 100, 100, 100, [1, 1, 1, 1, 1, 1], true);
+            1, "waterA", 100, 100, 100, [1, 1, 1, 1, 1, 1], _nature, true);
 
         var extent = Pokemon.GetPokemons();
         Assert.That(extent.Count, Is.EqualTo(2));
@@ -99,9 +112,9 @@ public class PokemonTest
     public void Pokemon_Encapsulation_Test()
     {
         Fire firePokemon = new Fire(
-            1, "fireA", 100, 100, 100, [1, 1, 1, 1, 1, 1], 100);
+            1, "fireA", 100, 100, 100, [1, 1, 1, 1, 1, 1], _nature, 100);
         Water waterPokemon = new Water(
-            1, "waterA", 100, 100, 100, [1, 1, 1, 1, 1, 1], true);
+            1, "waterA", 100, 100, 100, [1, 1, 1, 1, 1, 1], _nature, true);
 
         var extent = Pokemon.GetPokemons();
         Assert.That(extent.Find(p=>p.Name=="fireA").Name, Is.EqualTo("fireA"));
@@ -122,10 +135,10 @@ public class PokemonTest
         if (File.Exists(TestPath)) File.Delete(TestPath);
 
         Land land = new Land(
-            1, "landA", 100, 100, 100, [1, 1, 1, 1, 1, 1], 100);
+            1, "landA", 100, 100, 100, [1, 1, 1, 1, 1, 1], _nature, 100);
         
         Fire fire = new Fire(
-            1, "fireA", 100, 100, 100, [1, 1, 1, 1, 1, 1], 100);
+            1, "fireA", 100, 100, 100, [1, 1, 1, 1, 1, 1], _nature, 100);
         
         var initialExtent = Pokemon.GetPokemons();
         Assert.That(initialExtent.Count, Is.EqualTo(2));
