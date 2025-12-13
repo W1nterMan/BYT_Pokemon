@@ -7,9 +7,9 @@ public class PokemonInBagTest
     [Test]
     public void PokemonInBag_Add_Test()
     {
-        Nature brave = new Nature("Brave",1,2);
+        Nature adamant = new Nature("Adamant",1,2);
         Fire firePokemonA = new Fire(
-            1, "fireA", 100, 100, 100, [1, 1, 1, 1, 1, 1], brave, 100);
+            1, "fireA", 100, 100, 100, [1, 1, 1, 1, 1, 1], adamant, 100);
         Bag bagA = new Bag();
         
         PokemonInBag fire_bagA=new PokemonInBag(firePokemonA, bagA,"Ultra ball");
@@ -25,9 +25,9 @@ public class PokemonInBagTest
     [Test]
     public void PokemonInBag_Remove_Test()
     {
-        Nature lonely = new Nature("Lonely",0,3);
+        Nature naughty = new Nature("Naughty",0,3);
         Fire firePokemonA = new Fire(
-            1, "fireA", 100, 100, 100, [1, 1, 1, 1, 1, 1], lonely, 100);
+            1, "fireA", 100, 100, 100, [1, 1, 1, 1, 1, 1], naughty, 100);
         Bag bagA = new Bag();
         
         PokemonInBag fire_bagA=new PokemonInBag(firePokemonA, bagA,"Ultra ball");

@@ -7,11 +7,11 @@ public class PokemonTest
     [Test]
     public void Pokemon_Nullable_EvolvesTo_Test()
     {
-        Nature brave = new Nature("Brave", 1, 2);
+        Nature lax = new Nature("Lax", 1, 2);
         Pokemon pokemonA=new Pokemon(
-            1,"pokemonA",100,100,100,[1,1,1,1,1,1],brave);
+            1,"pokemonA",100,100,100,[1,1,1,1,1,1],lax);
         Pokemon pokemonB=new Pokemon(
-            2,"pokemonB",100,100,100,[1,1,1,1,1,1],brave);
+            2,"pokemonB",100,100,100,[1,1,1,1,1,1],lax);
         Assert.IsNull(pokemonA.EvolvesTo);
         pokemonA.EvolvesTo = pokemonB;
         Assert.IsNotNull(pokemonA.EvolvesTo);
@@ -20,9 +20,9 @@ public class PokemonTest
     [Test]
     public void Pokemon_EvolvesTo_Test_ThrowsException()
     {
-        Nature lonely = new Nature("Lonely", 1, 2);
+        Nature relaxed = new Nature("Relaxed", 1, 2);
         Pokemon pokemonA=new Pokemon(
-            1,"pokemonA",100,100,100,[1,1,1,1,1,1],lonely);
+            1,"pokemonA",100,100,100,[1,1,1,1,1,1],relaxed);
         Assert.IsNull(pokemonA.EvolvesTo);
         Assert.Throws<ArgumentException>(()=>pokemonA.EvolvesTo = pokemonA);
     }

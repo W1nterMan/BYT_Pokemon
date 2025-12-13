@@ -131,25 +131,7 @@ public class Nature
     
     public void AddPokemon(Pokemon pokemon)
     {
-        if (_pokemons.Contains(pokemon))
-        {
-            return;
-        }
-            
-        bool added = false;
-            
-        try
-        {
-            _pokemons.Add(pokemon);
-            added = true;
-        }
-        catch (Exception e)
-        {
-            if (added)
-            {
-                _pokemons.Remove(pokemon);
-            }
-        }
+        _pokemons.Add(pokemon);
     }
 
     public void RemovePokemon(Pokemon pokemon)
@@ -159,19 +141,6 @@ public class Nature
             return;
         }
         
-        bool removed = false;
-            
-        try
-        {
-            _pokemons.Remove(pokemon);
-            removed = true;
-        }
-        catch (Exception e)
-        {
-            if (removed)
-            {
-                _pokemons.Add(pokemon);
-            }
-        }
+        _pokemons.Remove(pokemon);
     }
 }
