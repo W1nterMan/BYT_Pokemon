@@ -11,6 +11,7 @@ public class Nature
     private int _raisedStat; //0~5, according to index of _baseStats of Pokemon
     private int _loweredStat; //same
     public static double StatsBoostRate { get;} = 0.1;
+    private HashSet<Pokemon> _pokemons = new HashSet<Pokemon>();
 
     public string Name
     {
@@ -124,5 +125,22 @@ public class Nature
             }
         }
         return true; 
+    }
+    
+    public HashSet<Pokemon> GetNaturePokemons()=>new HashSet<Pokemon>(_pokemons);
+    
+    public void AddPokemon(Pokemon pokemon)
+    {
+        _pokemons.Add(pokemon);
+    }
+
+    public void RemovePokemon(Pokemon pokemon)
+    {
+        if (!_pokemons.Contains(pokemon))
+        {
+            return;
+        }
+        
+        _pokemons.Remove(pokemon);
     }
 }

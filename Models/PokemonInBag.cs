@@ -7,28 +7,17 @@ namespace Models;
 public class PokemonInBag
 {
     private static List<PokemonInBag> _extent=new List<PokemonInBag>();
-    //comment out at current step
-    //private Trainer _trainer; 
-    //private Pokemon _pokemon;
+    private Pokemon _pokemon;
+    private Bag _bag;
     private string _pokeball;
-
-    /*public Trainer Trainer
-    {
-        get => _trainer;
-        set
-        {
-            _trainer = value ?? throw new ArgumentException("Trainer can not be null");
-        }
-    }*/
-
-    /*public Pokemon Pokemon
+    public Pokemon Pokemon
     {
         get => _pokemon;
         set
         {
             _pokemon = value ?? throw new ArgumentException("Pokemon can not be null");
         }
-    }*/
+    }
 
     public string Pokeball
     {
@@ -42,16 +31,32 @@ public class PokemonInBag
             _pokeball = value;
         }
     }
-    //we can add date here for more attributes.
+
+    public Bag Bag
+    {
+        get => _bag;
+        set
+        {
+            _bag = value ?? throw new ArgumentException("Bag can not be null");
+        }
+    }
     
     public PokemonInBag(){}
 
-    public PokemonInBag(/*Trainer trainer, Pokemon pokemon,*/ string pokeball)
+    public PokemonInBag( Pokemon pokemon,Bag bag, string pokeball)
     {
-        //Trainer = trainer;
-        //Pokemon = pokemon;
+        Pokemon = pokemon;
         Pokeball = pokeball;
+        Bag = bag;
+        bag.StorePokemon(this);
+        pokemon.AddPokemonToBag(this);
         AddPokemonInBag(this);
+    }
+
+    public void RemovePokemonFromBag()
+    {
+        _pokemon.RemovePokemonFromBag(this);
+        _bag.TakePokemon(this);
     }
     
     private static void AddPokemonInBag(PokemonInBag pokemonInBag)
