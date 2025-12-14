@@ -14,12 +14,33 @@ namespace Models
         private string _name;
         private bool _isAccessible;
         
+        private Location _location; 
+        
+        public Location Location 
+        { 
+            get => _location;
+            set 
+            {
+                _location = value;
+                if (_location != null)
+                {
+                    _location.AddBuilding(this);
+                }
+            }
+        }
+        
         public Building() { }
 
-        public Building(string name, bool isAccessible)
+        public Building(string name, bool isAccessible, Location location)
         {
             Name = name;
             IsAccessible = isAccessible;
+            
+            if (location == null) throw new ArgumentNullException(nameof(location), "Building must be placed in a Location.");
+            
+            _location = location;
+            _location.AddBuilding(this);
+
             AddBuilding(this);
         }
         
@@ -71,6 +92,14 @@ namespace Models
                 return true;
             }
             return false;
+        }
+        
+        public static void RemoveFromExtent(Building building)
+        {
+            if(_extent.Contains(building))
+            {
+                _extent.Remove(building);
+            }
         }
     }
 }

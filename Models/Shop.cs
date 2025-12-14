@@ -22,7 +22,7 @@ namespace Models
 
         public Shop() { }
 
-        public Shop(string name, bool isAccessible, double multiplier) : base(name, isAccessible)
+        public Shop(string name, bool isAccessible, double multiplier, Location location) : base(name, isAccessible, location)
         {
             PriceMultiplier = multiplier;
         }

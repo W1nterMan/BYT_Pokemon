@@ -123,6 +123,78 @@ namespace Models
                 }
             }
         }
+        
+        private HashSet<Bush> _bushes = new HashSet<Bush>();
+        public HashSet<Bush> GetBushes() => new HashSet<Bush>(_bushes);
+        
+        public void AddBush(Bush bush)
+        {
+            if (bush == null) throw new ArgumentNullException(nameof(bush));
+            if (_bushes.Contains(bush)) return;
+
+            _bushes.Add(bush);
+            
+            if (bush.Road != this) throw new Exception("Bush belongs to different Road");
+        }
+
+        public void RemoveBush(Bush bush)
+        {
+            if (!_bushes.Contains(bush)) return;
+            
+            if (_bushes.Count <= 1)
+            {
+                throw new InvalidOperationException("Cannot remove the last Bush. A Road must have at least one Bush.");
+            }
+
+            _bushes.Remove(bush);
+            Bush.RemoveFromExtent(bush);
+        }
+        
+        public void DeleteRoad()
+        {
+            foreach (var road in new List<Road>(_connectedRoads))
+            {
+                DisconnectFromRoad(road);
+            }
+            
+            var bushesToDelete = new List<Bush>(_bushes);
+            foreach(var b in bushesToDelete)
+            {
+                Bush.RemoveFromExtent(b);
+            }
+            _bushes.Clear();
+            
+            foreach(var loc in new List<Location>(_locations))
+            {
+                RemoveLocation(loc);
+            }
+            
+            _extent.Remove(this);
+        }
+        
+        private HashSet<Road> _connectedRoads = new HashSet<Road>();
+        public HashSet<Road> GetConnectedRoads() => new HashSet<Road>(_connectedRoads);
+        
+        public void ConnectToRoad(Road otherRoad)
+        {
+            if (otherRoad == null) throw new ArgumentNullException(nameof(otherRoad));
+            if (otherRoad == this) throw new ArgumentException("A road cannot connect to itself");
+            
+            if (_connectedRoads.Contains(otherRoad)) return;
+
+            _connectedRoads.Add(otherRoad);
+            
+            otherRoad.ConnectToRoad(this);
+        }
+        
+        public void DisconnectFromRoad(Road otherRoad)
+        {
+            if (!_connectedRoads.Contains(otherRoad)) return;
+
+            _connectedRoads.Remove(otherRoad);
+            
+            otherRoad.DisconnectFromRoad(this);
+        }
     }
 }
 

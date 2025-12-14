@@ -41,7 +41,7 @@ namespace Models
 
         public Gym() { }
 
-        public Gym(string badgeName, bool isAccessible, string leader) : base(badgeName, isAccessible)
+        public Gym(string badgeName, bool isAccessible, string leader, Location location) : base(badgeName, isAccessible, location)
         {
             Leader = leader;
         }

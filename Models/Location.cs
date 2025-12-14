@@ -7,7 +7,7 @@ namespace Models
     public class Location
     {
         private static List<Location> _extent = new List<Location>();
-
+        
         private string _name;
         public string Name
         {
@@ -122,6 +122,46 @@ namespace Models
                 }
             }
         }
+        
+        private HashSet<Building> _buildings = new HashSet<Building>();
+        public HashSet<Building> GetBuildings() => new HashSet<Building>(_buildings);
+        
+        public void AddBuilding(Building building)
+        {
+            if (building == null) throw new ArgumentNullException(nameof(building));
+            
+            if (_buildings.Contains(building)) return;
+            
+            _buildings.Add(building);
+            
+            if (building.Location != this)
+            {
+                throw new Exception("Building belongs to a different location.");
+            }
+        }
+        
+        public void RemoveBuilding(Building building)
+        {
+            if (!_buildings.Contains(building)) return;
+
+            _buildings.Remove(building);
+            
+            Building.RemoveFromExtent(building);
+        }
+        
+        public void DeleteLocation()
+        {
+            var buildingsToDelete = new List<Building>(_buildings);
+            
+            foreach (var b in buildingsToDelete)
+            {
+                Building.RemoveFromExtent(b);
+            }
+            _buildings.Clear();
+            
+            _extent.Remove(this);
+        }
+        
     }
 }
 
