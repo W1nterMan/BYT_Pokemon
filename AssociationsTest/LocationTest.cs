@@ -1,6 +1,6 @@
 using Models;
 
-namespace AsociationsTest;
+namespace AssociationsTest;
 
 public class LocationTest
 {
@@ -35,6 +35,28 @@ public class LocationTest
         Assert.That(loc1.GetLocationRoads().Count, Is.EqualTo(0));
         Assert.That(loc2.GetLocationRoads().Count, Is.EqualTo(1));
         Assert.That(road1.GetRoadLocations().Count, Is.EqualTo(1));
+    }
+    
+    [Test]
+    public void Location_Building_Composition_Test()
+    {
+        var town = new Location("Town", 10, 10, LocationType.Town);
+        
+        var shop = new Shop("Shop", true, 1.0, town);
+        
+        Assert.IsTrue(town.GetBuildings().Contains(shop));
+        Assert.AreEqual(town, shop.Location);
+        
+        town.DeleteLocation();
+        
+        var buildingExtent = Building.GetExtent();
+        Assert.IsFalse(buildingExtent.Contains(shop), "Shop should be deleted when Location is deleted");
+    }
+    
+    [Test]
+    public void Building_Cannot_Exist_Without_Location()
+    {
+        Assert.Throws<ArgumentNullException>(() => new Shop("Shop", true, 1.0, null));
     }
     
     
