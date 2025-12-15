@@ -23,6 +23,22 @@ public class PokemonInBag
             _pokeball = value;
         }
     }
+
+    private DateTime _dateOfCatch;
+
+    public DateTime DateOfCatch
+    {
+        get => _dateOfCatch;
+        set
+        {
+            if (_dateOfCatch > DateTime.Now)
+            {
+                throw new ArgumentException("Date of catch cannot be in the future.");
+            }
+
+            _dateOfCatch = value;
+        }
+    }
     
     //Associations
     private Pokemon _pokemon;
@@ -73,6 +89,7 @@ public class PokemonInBag
     public PokemonInBag( Pokemon pokemon,Bag bag, string pokeball)
     {
         Pokeball = pokeball;
+        DateOfCatch = DateTime.Now;
         
         Pokemon = pokemon;
         Bag = bag;
