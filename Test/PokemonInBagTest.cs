@@ -5,23 +5,35 @@ namespace Test;
 
 public class PokemonInBagTest
 {
+    private Nature brave;
+    private Pokemon pikachu;
+    
     [SetUp]
     public void Setup()
     {
-        var field =typeof(PokemonInBag).GetField("_extent", BindingFlags.Static|BindingFlags.NonPublic);
-        field.SetValue(null, new List<PokemonInBag>());
+        var pib =typeof(PokemonInBag).GetField("_extent", BindingFlags.Static|BindingFlags.NonPublic);
+        pib.SetValue(null, new List<PokemonInBag>());
+        
+        var nature =typeof(Nature).GetField("_extent", BindingFlags.Static|BindingFlags.NonPublic);
+        nature.SetValue(null, new List<Nature>());
+        
+        brave = new Nature("Brave", 1, 2);
+        pikachu = new Pokemon(1, "Charmander", 20, 1, 40, new int[]{1,1,1,1,1,1}, brave);
     }
+    
     [Test]
     public void PokemonInBag_Invalid_Argument_ThrowException()
     {
-        Assert.Throws<ArgumentException>(()=>new PokemonInBag(""));
+        Bag bag = new Bag();
+        Assert.Throws<ArgumentException>(()=>new PokemonInBag(pikachu,bag,""));
     }
     
     [Test]
     public void PokemonInBag_Extent_Test()
     {
-        PokemonInBag pokemonA = new PokemonInBag("Ultra Ball");
-        PokemonInBag pokemonB = new PokemonInBag("Special Ball");
+        Bag bag = new Bag();
+        PokemonInBag pokemonA = new PokemonInBag(pikachu,bag,"Ultra Ball");
+        PokemonInBag pokemonB = new PokemonInBag(pikachu,bag,"Special Ball");
 
         var extent = PokemonInBag.GetPokemonsInBag();
         Assert.That(extent.Count, Is.EqualTo(2));
@@ -32,8 +44,9 @@ public class PokemonInBagTest
     [Test]
     public void PokemonInBag_Encapsulation_Test()
     {
-        PokemonInBag pokemonA = new PokemonInBag("Ultra Ball");
-        PokemonInBag pokemonB = new PokemonInBag("Special Ball");
+        Bag bag = new Bag();
+        PokemonInBag pokemonA = new PokemonInBag(pikachu,bag,"Ultra Ball");
+        PokemonInBag pokemonB = new PokemonInBag(pikachu,bag,"Special Ball");
 
         var extent = PokemonInBag.GetPokemonsInBag();
         Assert.That(extent.First(p=>p.Pokeball=="Ultra Ball").Pokeball, Is.EqualTo("Ultra Ball"));
@@ -49,12 +62,13 @@ public class PokemonInBagTest
     [Test]
     public void PokemonInBag_Persistence_Test()
     {
+        Bag bag = new Bag();
         string TestPath = "test_pokemons_in_bag.xml";
         
         if (File.Exists(TestPath)) File.Delete(TestPath);
 
-        PokemonInBag pokemonA = new PokemonInBag("Ultra Ball");
-        PokemonInBag pokemonB = new PokemonInBag("Special Ball");
+        PokemonInBag pokemonA = new PokemonInBag(pikachu,bag,"Ultra Ball");
+        PokemonInBag pokemonB = new PokemonInBag(pikachu,bag,"Special Ball");
         
         var initialExtent = PokemonInBag.GetPokemonsInBag();
         Assert.That(initialExtent.Count, Is.EqualTo(2));
@@ -69,7 +83,7 @@ public class PokemonInBagTest
         
         var loadedPokemonA = loadedExtent.OfType<PokemonInBag>().FirstOrDefault(p => p.Pokeball == "Ultra Ball");
         
-        Assert.IsNotNull(loadedPokemonA, "Shop should be retrieved");
+        Assert.IsNotNull(loadedPokemonA, "PokemonA should be retrieved");
         Assert.That(loadedPokemonA.Pokeball, Is.EqualTo("Ultra Ball"));
     }
 }

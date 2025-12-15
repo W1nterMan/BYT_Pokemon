@@ -6,16 +6,66 @@ namespace Models;
 public class Team
 {
     private static List<Team> _extent = new List<Team>();
-    private string _name = string.Empty;
+
+    //Attributes
+    private string _name;
 
     public string Name
     {
         get => _name;
         set
         {
-            if (string.IsNullOrWhiteSpace(value)) throw new ArgumentException("Team can not be empty.");
+            if (string.IsNullOrWhiteSpace(value))
+                throw new ArgumentException("Team name cannot be empty.");
             _name = value;
         }
+    }
+
+    //Associations
+    private Dictionary<int, Trainer> _trainers = new();
+    
+    public static List<Team> GetTeams()
+    {
+        return new List<Team>(_extent);
+    }
+
+    public IReadOnlyDictionary<int, Trainer> GetTeamMembers()
+    {
+        return new Dictionary<int, Trainer>(_trainers);
+    }
+
+    public void AddTeamMember(Trainer trainer)
+    {
+        if (trainer == null)
+            throw new ArgumentNullException(nameof(trainer));
+
+        if (trainer.Team != null)
+            throw new InvalidOperationException("Trainer already belongs to a team.");
+
+        if (_trainers.ContainsKey(trainer.TrainerId))
+            throw new InvalidOperationException("Trainer already in this team.");
+
+        _trainers.Add(trainer.TrainerId, trainer);
+        trainer.Team = this;
+    }
+
+    public void RemoveTeamMember(int trainerId)
+    {
+        if (!_trainers.TryGetValue(trainerId, out var trainer))
+            throw new InvalidOperationException("Trainer not found in this team.");
+
+        _trainers.Remove(trainerId);
+        trainer.Team = null;
+    }
+
+    public void DeleteTeam()
+    {
+        foreach (var trainer in _trainers.Values.ToList())
+        {
+            trainer.Team = null;
+        }
+        _trainers.Clear();
+        _extent.Remove(this);
     }
     
     public Team() { }
@@ -23,21 +73,7 @@ public class Team
     public Team(string name)
     {
         Name = name;
-        AddTeam(this);
-    }
-
-    private static void AddTeam(Team team)
-    {
-        if (team == null)
-        {
-            throw new ArgumentException("Team cannot be null.");
-        }
-        _extent.Add(team);
-    }
-
-    public static List<Team> GetTeams()
-    {
-        return new List<Team>(_extent);
+        _extent.Add(this);
     }
 
     public static void Save(string path = "teams.xml")
@@ -47,15 +83,12 @@ public class Team
 
     public static bool Load(string path = "teams.xml")
     {
-        var loadedList = Serializer.Load(path, _extent);
-        
-        if (loadedList != null)
+        var loaded = Serializer.Load(path, _extent);
+        if (loaded != null)
         {
-            _extent = loadedList;
+            _extent = loaded;
             return true;
         }
         return false;
     }
-    
-    //public void AddTeamMember(Trainer trainer) { }
 }

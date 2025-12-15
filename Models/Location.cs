@@ -7,7 +7,7 @@ namespace Models
     public class Location
     {
         private static List<Location> _extent = new List<Location>();
-
+        
         private string _name;
         public string Name
         {
@@ -69,6 +69,99 @@ namespace Models
             }
             return false;
         }
+
+        private HashSet<Road> _roads = new HashSet<Road>();
+        
+        public HashSet<Road> GetLocationRoads() => new HashSet<Road>(_roads);
+
+        public void AddRoad(Road road)
+        {
+            if (_roads.Contains(road))
+            {
+                return;
+            }
+            
+            bool added = false;
+            
+            try
+            {
+                _roads.Add(road);
+                added = true;
+                road.AddLocation(this);
+            }
+            catch (Exception e)
+            {
+                if (added)
+                {
+                    _roads.Remove(road);
+                }
+            }
+            
+        }
+
+        public void RemoveRoad(Road road)
+        {
+            if (!_roads.Contains(road))
+            {
+                return;
+            }
+            
+            bool removed = false;
+            
+            try
+            {
+                _roads.Remove(road);
+                removed = true;
+                road.RemoveLocation(this);
+            }
+            catch (Exception e)
+            {
+                if (removed)
+                {
+                    _roads.Add(road);
+                }
+            }
+        }
+        
+        private HashSet<Building> _buildings = new HashSet<Building>();
+        public HashSet<Building> GetBuildings() => new HashSet<Building>(_buildings);
+        
+        public void AddBuilding(Building building)
+        {
+            if (building == null) throw new ArgumentNullException(nameof(building));
+            
+            if (_buildings.Contains(building)) return;
+            
+            _buildings.Add(building);
+            
+            if (building.Location != this)
+            {
+                throw new Exception("Building belongs to a different location.");
+            }
+        }
+        
+        public void RemoveBuilding(Building building)
+        {
+            if (!_buildings.Contains(building)) return;
+
+            _buildings.Remove(building);
+            
+            Building.RemoveFromExtent(building);
+        }
+        
+        public void DeleteLocation()
+        {
+            var buildingsToDelete = new List<Building>(_buildings);
+            
+            foreach (var b in buildingsToDelete)
+            {
+                Building.RemoveFromExtent(b);
+            }
+            _buildings.Clear();
+            
+            _extent.Remove(this);
+        }
+        
     }
 }
 
