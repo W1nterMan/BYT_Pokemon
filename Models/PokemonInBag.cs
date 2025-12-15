@@ -6,19 +6,11 @@ namespace Models;
 [Serializable]
 public class PokemonInBag
 {
-    private static List<PokemonInBag> _extent=new List<PokemonInBag>();
-    private Pokemon _pokemon;
-    private Bag _bag;
+    private static List<PokemonInBag> _extent = new List<PokemonInBag>();
+    
+    //Attributes
     private string _pokeball;
-    public Pokemon Pokemon
-    {
-        get => _pokemon;
-        set
-        {
-            _pokemon = value ?? throw new ArgumentException("Pokemon can not be null");
-        }
-    }
-
+    
     public string Pokeball
     {
         get => _pokeball;
@@ -31,7 +23,20 @@ public class PokemonInBag
             _pokeball = value;
         }
     }
-
+    
+    //Associations
+    private Pokemon _pokemon;
+    private Bag _bag;
+   
+    public Pokemon Pokemon
+    {
+        get => _pokemon;
+        set
+        {
+            _pokemon = value ?? throw new ArgumentException("Pokemon can not be null");
+        }
+    }
+    
     public Bag Bag
     {
         get => _bag;
@@ -40,23 +45,13 @@ public class PokemonInBag
             _bag = value ?? throw new ArgumentException("Bag can not be null");
         }
     }
-    
-    public PokemonInBag(){}
-
-    public PokemonInBag( Pokemon pokemon,Bag bag, string pokeball)
-    {
-        Pokemon = pokemon;
-        Pokeball = pokeball;
-        Bag = bag;
-        bag.StorePokemon(this);
-        pokemon.AddPokemonToBag(this);
-        AddPokemonInBag(this);
-    }
 
     public void RemovePokemonFromBag()
     {
         _pokemon.RemovePokemonFromBag(this);
         _bag.TakePokemon(this);
+
+        _extent.Remove(this);
     }
     
     private static void AddPokemonInBag(PokemonInBag pokemonInBag)
@@ -73,48 +68,34 @@ public class PokemonInBag
         return _extent;
     }
     
+    public PokemonInBag(){}
+
+    public PokemonInBag( Pokemon pokemon,Bag bag, string pokeball)
+    {
+        Pokeball = pokeball;
+        
+        Pokemon = pokemon;
+        Bag = bag;
+        bag.StorePokemon(this);
+        pokemon.AddPokemonToBag(this);
+        
+        AddPokemonInBag(this);
+    }
     
     public static void Save(string path = "pokemons_in_bag.xml")
     {
-        StreamWriter file = File.CreateText(path);
-        XmlSerializer xmlSerializer = new XmlSerializer(typeof(List<PokemonInBag>)); 
-        using (XmlTextWriter writer = new XmlTextWriter(file)) 
-        {
-            xmlSerializer.Serialize(writer, _extent); 
-        }
+        Serializer.Save(path, _extent);
     }
     
     public static bool Load(string path = "pokemons_in_bag.xml")
     {
-        StreamReader file;
-        try
+        var loadedList = Serializer.Load(path, _extent);
+        
+        if (loadedList != null)
         {
-            file = File.OpenText(path);
+            _extent = loadedList;
+            return true;
         }
-        catch (FileNotFoundException)
-        {
-            _extent.Clear();
-            return false;    
-        }
-
-        XmlSerializer xmlSerializer = new XmlSerializer(typeof(List<PokemonInBag>));
-        using (XmlTextReader reader = new XmlTextReader(file))
-        {
-            try
-            {
-                _extent = (List<PokemonInBag>)xmlSerializer.Deserialize(reader);
-            }
-            catch (InvalidCastException)
-            {
-                _extent.Clear();
-                return false;   
-            }
-            catch (Exception)
-            {
-                _extent.Clear();
-                return false;   
-            }
-        }
-        return true; 
+        return false;
     }
 }

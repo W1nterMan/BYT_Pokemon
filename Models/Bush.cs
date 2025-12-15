@@ -5,29 +5,11 @@ namespace Models
     public class Bush
     {
         private static List<Bush> _extent = new List<Bush>();
-        private static double _encounterChance;
-        private Road _road;
-        public Road Road 
-        { 
-            get => _road; 
-            set 
-            {
-                _road = value;
-                if (_road != null)
-                {
-                    _road.AddBush(this);
-                }
-            }
-        }
         
+        //Attributes
+        private static double _encounterChance = 0.1;
         private bool _isActive;
-        public bool IsActive
-        {
-            get => _isActive;
-            set => _isActive = value;
-        }
-
-
+        
         public static double EncounterChance
         {
             get => _encounterChance;
@@ -41,16 +23,33 @@ namespace Models
             }
         }
         
+        public bool IsActive
+        {
+            get => _isActive;
+            set => _isActive = value;
+        }
+        
+        //Associations
+        private Road _road;
+        public Road Road 
+        { 
+            get => _road; 
+            set 
+            {
+                _road = value;
+            }
+        }
+        
         public Bush() { }
 
-        public Bush(bool isActive, double encounterChance, Road road)
+        public Bush(bool isActive, Road road)
         {
             if (road == null) throw new ArgumentNullException(nameof(road), "Bush must grow on a Road.");
             
             IsActive = isActive;
-            EncounterChance = encounterChance;
             
             Road = road;
+            road.AddBush(this);
             
             _extent.Add(this);
         }

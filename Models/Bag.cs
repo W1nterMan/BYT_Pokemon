@@ -4,13 +4,29 @@ namespace Models;
 public class Bag
 {
     //private static List<Bag> _extent = new List<Bag>();
-    private HashSet<PokemonInBag>? _pokemonsInBag=new HashSet<PokemonInBag>();
     
-    // public Bag(Trainer owner)
-    // {
-    //     _owner = owner ?? throw new ArgumentNullException(nameof(owner));
-    // }
-    //
+    //Attributes
+    private static int _maximumQuantity = 6;
+
+    public static int MaximumQuantity
+    {
+        get => _maximumQuantity;
+        set
+        {
+            if (value < 0) throw new ArgumentException("Quantity cannot be less than zero.");
+            _maximumQuantity = MaximumQuantity;
+        }
+    }
+    
+    //Associations
+    
+    private HashSet<PokemonInBag> _pokemonsInBag=new HashSet<PokemonInBag>();
+    
+    /*public Bag(Trainer owner)
+    {
+        _owner = owner ?? throw new ArgumentNullException(nameof(owner));
+    }*/
+    
     public HashSet<PokemonInBag> OpenBag() => new HashSet<PokemonInBag>(_pokemonsInBag);
      public void StorePokemon(PokemonInBag pokemon)
      {

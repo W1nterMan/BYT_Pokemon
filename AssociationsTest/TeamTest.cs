@@ -46,4 +46,18 @@ public class TeamTest
             teamBlue.AddTeamMember(trainer)
         );
     }
+    
+    [Test]
+    public void DeleteTeamTest()
+    {
+        Team teamRed = new Team("Team Red");
+
+        Trainer trainer = new Trainer(12, 1000, new string[0], "Active", "Bubba", 41);
+
+        teamRed.AddTeamMember(trainer);
+
+        teamRed.DeleteTeam();
+        
+        Assert.That(trainer.Team,Is.Null);
+    }
 }

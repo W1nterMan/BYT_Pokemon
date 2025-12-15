@@ -10,9 +10,7 @@ public class PokecenterTest
     public void Pokecenter_PC_Composition_Test()
     {
         var city = new Location("City", 1, 1, LocationType.City);
-        var center = new Pokecenter("Pokecenter", true, city);
-        
-        center.addPC(99);
+        var center = new Pokecenter("Pokecenter", true, city, 99);
         
         Assert.IsNotNull(center.Pc);
         Assert.AreEqual(99, center.Pc.ComputerNumber);

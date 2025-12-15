@@ -5,9 +5,10 @@ namespace Models;
 [Serializable]
 public class Team
 {
-    private static List<Team> _extent = new();
+    private static List<Team> _extent = new List<Team>();
 
-    private string _name = string.Empty;
+    //Attributes
+    private string _name;
 
     public string Name
     {
@@ -20,17 +21,10 @@ public class Team
         }
     }
 
+    //Associations
     private Dictionary<int, Trainer> _trainers = new();
-
-    public Team() { }
-
-    public Team(string name)
-    {
-        Name = name;
-        _extent.Add(this);
-    }
     
-     public static List<Team> GetTeams()
+    public static List<Team> GetTeams()
     {
         return new List<Team>(_extent);
     }
@@ -62,6 +56,24 @@ public class Team
 
         _trainers.Remove(trainerId);
         trainer.Team = null;
+    }
+
+    public void DeleteTeam()
+    {
+        foreach (var trainer in _trainers.Values.ToList())
+        {
+            trainer.Team = null;
+        }
+        _trainers.Clear();
+        _extent.Remove(this);
+    }
+    
+    public Team() { }
+
+    public Team(string name)
+    {
+        Name = name;
+        _extent.Add(this);
     }
 
     public static void Save(string path = "teams.xml")

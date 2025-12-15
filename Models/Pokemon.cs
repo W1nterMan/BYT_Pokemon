@@ -11,7 +11,9 @@ namespace Models;
 [XmlInclude(typeof(Underwater))]
 public class Pokemon
 {
-    private static List<Pokemon> _extent=new List<Pokemon>();
+    private static List<Pokemon> _extent = new List<Pokemon>();
+    
+    //Attributes
     private int _id;
     private int _healthPoints;
     private string _name;
@@ -19,8 +21,6 @@ public class Pokemon
     private double _weight;
     private int[] _baseStats = new int[6]; // <-- [hp,attack,defence,sp.atk,sp.def,speed]
     private string? _status; //can be "","Active","Defeated"
-    private Pokemon? _evolvesTo;
-    private HashSet<PokemonInBag>  _pokemonsInBag=new HashSet<PokemonInBag>();
 
     public int Id
     {
@@ -31,13 +31,14 @@ public class Pokemon
             {
                 throw new ArgumentException("Id must be greater than 0");
             }
+            
             _id = value;
         }
     }
 
     public int HealthPoints
     {
-        get =>_healthPoints;
+        get => _healthPoints;
         set
         {
             if (value < 0)
@@ -48,34 +49,45 @@ public class Pokemon
             _healthPoints= value;
         }
     }
+    
     public string Name { 
-        get=>_name;
+        get => _name;
         set
         {
             if (string.IsNullOrEmpty(value))
             {
                 throw new ArgumentException("Name must not be null or empty");
             }
+            
             _name = value;
-        } }
-    public int ExpPoints { get=>_expPoints;
+        }
+    }
+    
+    public int ExpPoints {
+        get => _expPoints;
         set
         {
             if (value < 0)
             {
                 throw new ArgumentException("ExpPoints must be non-negative");
             }
+            
             _expPoints = value;
-        } }
-    public double Weight { get=>_weight;
+        }
+    }
+    
+    public double Weight {
+        get => _weight;
         set
         {
             if (value <= 0)
             {
                 throw new ArgumentException("Weight must be greater than 0");
             }
+            
             _weight = value;
-        } }
+        }
+    }
 
     public int[] BaseStats
     {
@@ -112,6 +124,9 @@ public class Pokemon
             _status = value;
         }
     }
+    
+    //Associations
+    private Pokemon? _evolvesTo;
 
     public Pokemon? EvolvesTo
     {
@@ -120,63 +135,19 @@ public class Pokemon
         {
             if (value != null && value._id == _id)
             {
-                throw new ArgumentException("Same pokemon cannot be specified to evolution target");
+                throw new ArgumentException("Same pokemon cannot be specified to evolution target.");
             }
+            
             _evolvesTo = value;
         }
     }
     
     public Nature Nature { get;  }
     
-    public Pokemon(){}
+    private HashSet<PokemonInBag>  _pokemonsInBag = new HashSet<PokemonInBag>();
     
-    public Pokemon(int id, string name, int healthPoints, int expPoints, double weight, int[] baseStats, Nature nature)
-    {
-        //constructor...
-        Id = id;
-        Name = name;
-        HealthPoints = healthPoints;
-        ExpPoints = expPoints;
-        Weight = weight;
-        BaseStats = baseStats;
-        Nature=nature;
-        nature.AddPokemon(this);
-        AddPokemon(this);
-    }
-
-    private static void AddPokemon(Pokemon pokemon)
-    {
-        if (pokemon == null)
-        {
-            throw new ArgumentException("Pokemon can not be null");
-        }
-        _extent.Add(pokemon);
-    }
-
-    public static List<Pokemon> GetPokemons()
-    {
-        return _extent;
-    }
-
-    public static void Save(string path = "pokemons.xml")
-    {
-        Serializer.Save(path, _extent);
-    }
-
-    public static bool Load(string path = "pokemons.xml")
-    {
-        var loadedList = Serializer.Load(path, _extent);
-        
-        if (loadedList != null)
-        {
-            _extent = loadedList;
-            return true;
-        }
-        return false;
-    }
+    public HashSet<PokemonInBag> GetPokemonsInBag() => new HashSet<PokemonInBag>(_pokemonsInBag);
     
-    public HashSet<PokemonInBag> GetPokemonsInBag()=>new HashSet<PokemonInBag>(_pokemonsInBag);
-
     public void AddPokemonToBag(PokemonInBag pokemonInBag)
     {
         if (_pokemonsInBag.Contains(pokemonInBag))
@@ -223,10 +194,85 @@ public class Pokemon
         }
     }
     
+    public Pokemon(){}
+    
+    public Pokemon(int id, string name, int healthPoints, int expPoints, double weight, int[] baseStats, Nature nature)
+    {
+        Id = id;
+        Name = name;
+        HealthPoints = healthPoints;
+        ExpPoints = expPoints;
+        Weight = weight;
+        BaseStats = baseStats;
+        
+        Nature = nature;
+        nature.AddPokemon(this);
+        AddPokemon(this);
+    }
+
+    private static void AddPokemon(Pokemon pokemon)
+    {
+        if (pokemon == null)
+        {
+            throw new ArgumentException("Pokemon can not be null");
+        }
+        _extent.Add(pokemon);
+    }
+
+    public void DeletePokemon()
+    {
+        foreach (var pib in _pokemonsInBag.ToList())
+        {
+            pib.RemovePokemonFromBag();
+        }
+        _pokemonsInBag.Clear();
+
+        if (_evolvesTo != null)
+        {
+            _evolvesTo = null;
+        }
+
+        foreach (var pokemon in _extent)
+        {
+            if (pokemon._evolvesTo == this)
+            {
+                pokemon._evolvesTo = null;
+            }
+        }
+        
+        if (Nature != null)
+        {
+            Nature.RemovePokemon(this);
+        }
+        
+        _extent.Remove(this);
+    }
+
+    public static List<Pokemon> GetPokemons()
+    {
+        return new List<Pokemon>(_extent);
+    }
+
+    public static void Save(string path = "pokemons.xml")
+    {
+        Serializer.Save(path, _extent);
+    }
+
+    public static bool Load(string path = "pokemons.xml")
+    {
+        var loadedList = Serializer.Load(path, _extent);
+        
+        if (loadedList != null)
+        {
+            _extent = loadedList;
+            return true;
+        }
+        return false;
+    }
 }
 
 public enum StatusEnum
 {
-Active,
-Defeated
+    Active,
+    Defeated
 }

@@ -5,8 +5,20 @@ namespace Models
     [Serializable]
     public class Pokecenter : Building
     {
+        //Attributes
         private static double _baseHealingCost = 0; 
         
+        public static double BaseHealingCost
+        {
+            get => _baseHealingCost;
+            set
+            {
+                if (value < 0) throw new ArgumentException("Healing cost cannot be negative.");
+                _baseHealingCost = value;
+            }
+        }
+        
+        //Associations
         private PC _pc;
 
         public PC Pc 
@@ -15,13 +27,7 @@ namespace Models
             set => _pc = value; 
         }
         
-        public Pokecenter() { }
-
-        public Pokecenter(string name, bool isAccessible, Location location) : base(name, isAccessible, location)
-        {
-        }
-        
-        public void addPC(int computerNumber)
+        public void AddPc(int computerNumber)
         {
             if (_pc != null) throw new InvalidOperationException("This Pokecenter already has a PC");
             
@@ -38,14 +44,11 @@ namespace Models
             RemoveFromExtent(this);
         }
         
-        public static double BaseHealingCost
+        public Pokecenter() { }
+
+        public Pokecenter(string name, bool isAccessible, Location location, int pcNumber) : base(name, isAccessible, location)
         {
-            get => _baseHealingCost;
-            set
-            {
-                if (value < 0) throw new ArgumentException("Healing cost cannot be negative.");
-                _baseHealingCost = value;
-            }
+            AddPc(pcNumber);
         }
     }
 }

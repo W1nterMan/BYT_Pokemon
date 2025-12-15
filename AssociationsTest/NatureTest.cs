@@ -8,6 +8,7 @@ public class NatureTest
     {
     }
 
+    //TODO: remove is not working how it should.
     [Test]
     public void AddPokemonToNatureTest()
     {

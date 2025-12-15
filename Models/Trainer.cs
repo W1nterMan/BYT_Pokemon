@@ -5,12 +5,11 @@ namespace Models;
 [Serializable]
 public class Trainer : Person
 {
-    public int TrainerId { get; }
-    private int _totalMoney;
+    //Attributes
     private string[] _badges = Array.Empty<string>();
+    private int _totalMoney;
     private string _status;
-    public Team? Team { get; internal set; }
-
+    
     public string[] Badges
     {
         get => _badges;
@@ -42,6 +41,33 @@ public class Trainer : Person
                 throw new ArgumentException("Invalid status.");
             }
             _status = value;
+        }
+    }
+    
+    //Associations
+    private int _trainerId;
+    private Team? _team;
+
+    public int TrainerId
+    {
+        get => _trainerId;
+        set
+        {
+            if (TrainerId < 0)
+            {
+                throw new ArgumentException("TrainerId cannot be less than zero.");
+            }
+
+            _trainerId = value;
+        }
+    }
+
+    public Team? Team
+    {
+        get => _team;
+        set
+        {
+            _team = value;
         }
     }
     

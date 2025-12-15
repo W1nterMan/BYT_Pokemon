@@ -9,19 +9,10 @@ namespace Models
     {
         private static List<Road> _extent = new List<Road>();
 
+        //Attributes
         private int _number;
         private TerrainType _terrainType;
         
-        public Road() { }
-
-        public Road(int number, TerrainType terrainType)
-        {
-            Number = number;
-            TerrainType = terrainType;
-            
-            addRoad(this);
-        }
-
         public int Number
         {
             get => _number;
@@ -42,33 +33,10 @@ namespace Models
             }
         }
         
-        private static void addRoad(Road road)
-        {
-            if (road == null) throw new ArgumentException("Road cannot be null");
-            _extent.Add(road);
-        }
-        
-        public static List<Road> GetExtent() => new List<Road>(_extent);
-        
-        public static void Save(string path = "roads.xml")
-        {
-            Serializer.Save(path, _extent);
-        }
-        
-        public static bool Load(string path = "roads.xml")
-        {
-            var loadedList = Serializer.Load(path, _extent);
-        
-            if (loadedList != null)
-            {
-                _extent = loadedList;
-                return true;
-            }
-            return false;
-        }
+        //Association
         
         private HashSet<Location> _locations = new HashSet<Location>();
-
+         
         public HashSet<Location> GetRoadLocations() => new HashSet<Location>(_locations);
 
         public void AddLocation(Location location)
@@ -125,16 +93,16 @@ namespace Models
         }
         
         private HashSet<Bush> _bushes = new HashSet<Bush>();
+        
         public HashSet<Bush> GetBushes() => new HashSet<Bush>(_bushes);
         
         public void AddBush(Bush bush)
         {
             if (bush == null) throw new ArgumentNullException(nameof(bush));
             if (_bushes.Contains(bush)) return;
-
-            _bushes.Add(bush);
-            
             if (bush.Road != this) throw new Exception("Bush belongs to different Road");
+            bush.Road = this;
+            _bushes.Add(bush);
         }
 
         public void RemoveBush(Bush bush)
@@ -194,6 +162,43 @@ namespace Models
             _connectedRoads.Remove(otherRoad);
             
             otherRoad.DisconnectFromRoad(this);
+        }
+        
+        private static void AddRoad(Road road)
+        {
+            if (road == null) throw new ArgumentException("Road cannot be null");
+            _extent.Add(road);
+        }
+        
+        public static List<Road> GetExtent() => new List<Road>(_extent);
+        
+        public Road() { }
+
+        public Road(int number, TerrainType terrainType, Location location)
+        {
+            Number = number;
+            TerrainType = terrainType;
+            location.AddRoad(this);
+            _locations.Add(location);
+            
+            AddRoad(this);
+        }
+        
+        public static void Save(string path = "roads.xml")
+        {
+            Serializer.Save(path, _extent);
+        }
+        
+        public static bool Load(string path = "roads.xml")
+        {
+            var loadedList = Serializer.Load(path, _extent);
+        
+            if (loadedList != null)
+            {
+                _extent = loadedList;
+                return true;
+            }
+            return false;
         }
     }
 }

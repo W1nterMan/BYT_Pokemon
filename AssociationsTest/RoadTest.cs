@@ -8,11 +8,12 @@ public class RoadTest
     public void AddLocationToRoadTest()
     {
         var loc1 = new Location("Village 1", 50, 50, LocationType.Village);
-        var road1 = new Road(1, TerrainType.Field);
+        var loc2 = new Location("Village 2", 50, 50, LocationType.Village);
+        var road1 = new Road(1, TerrainType.Field,loc2);
 
         road1.AddLocation(loc1);
         
-        Assert.That(road1.GetRoadLocations().Count, Is.EqualTo(1));
+        Assert.That(road1.GetRoadLocations().Count, Is.EqualTo(2));
     }
     
     [Test]
@@ -20,9 +21,8 @@ public class RoadTest
     {
         var loc1 = new Location("Village 1", 50, 50, LocationType.Village);
         var loc2 = new Location("Village 2", 10, 10, LocationType.Village);
-        var road1 = new Road(1, TerrainType.Field);
-
-        road1.AddLocation(loc1);
+        var road1 = new Road(1, TerrainType.Field,loc1);
+        
         road1.AddLocation(loc2);
         road1.RemoveLocation(loc1);
         
@@ -35,9 +35,7 @@ public class RoadTest
     public void RemoveLocationFromRoadExceptionTest()
     {
         var loc1 = new Location("Village 1", 50, 50, LocationType.Village);
-        var road1 = new Road(1, TerrainType.Field);
-
-        road1.AddLocation(loc1);
+        var road1 = new Road(1, TerrainType.Field,loc1);
         
         Assert.Throws<Exception>(() => road1.RemoveLocation(loc1));
     }
@@ -45,9 +43,11 @@ public class RoadTest
     [Test]
     public void Road_Reflexive_Connection_Test()
     {
-        Road r1 = new Road(1, TerrainType.Field);
-        Road r2 = new Road(2, TerrainType.Mountains);
-        Road r3 = new Road(3, TerrainType.Cave);
+        var loc1 = new Location("Village 1", 50, 50, LocationType.Village);
+        
+        Road r1 = new Road(1, TerrainType.Field, loc1);
+        Road r2 = new Road(2, TerrainType.Mountains, loc1);
+        Road r3 = new Road(3, TerrainType.Cave, loc1);
         
         r1.ConnectToRoad(r2);
         
@@ -67,10 +67,12 @@ public class RoadTest
     [Test]
     public void Road_Bush_MinMultiplicity_Test()
     {
-        var road = new Road(101, TerrainType.Field);
+        var loc1 = new Location("Village 1", 50, 50, LocationType.Village);
         
-        var bush1 = new Bush(true, 0.5, road);
-        var bush2 = new Bush(true, 0.5, road);
+        var road = new Road(101, TerrainType.Field, loc1);
+        
+        var bush1 = new Bush(true,road);
+        var bush2 = new Bush(true,road);
         
         Assert.AreEqual(2, road.GetBushes().Count);
         

@@ -5,15 +5,22 @@ namespace Test;
 
 public class PokemonInBagTest
 {
+    private Nature brave;
+    private Pokemon pikachu;
+    
     [SetUp]
     public void Setup()
     {
-        var field =typeof(PokemonInBag).GetField("_extent", BindingFlags.Static|BindingFlags.NonPublic);
-        field.SetValue(null, new List<PokemonInBag>());
+        var pib =typeof(PokemonInBag).GetField("_extent", BindingFlags.Static|BindingFlags.NonPublic);
+        pib.SetValue(null, new List<PokemonInBag>());
+        
+        var nature =typeof(Nature).GetField("_extent", BindingFlags.Static|BindingFlags.NonPublic);
+        nature.SetValue(null, new List<Nature>());
+        
+        brave = new Nature("Brave", 1, 2);
+        pikachu = new Pokemon(1, "Charmander", 20, 1, 40, new int[]{1,1,1,1,1,1}, brave);
     }
-
-    private static Nature brave = new Nature("Brave", 1, 2);
-    private static Pokemon pikachu=new Pokemon(1, "Charmander", 20, 1, 40, new int[]{1,1,1,1,1,1}, brave);
+    
     [Test]
     public void PokemonInBag_Invalid_Argument_ThrowException()
     {

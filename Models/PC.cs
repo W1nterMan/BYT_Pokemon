@@ -5,16 +5,10 @@ namespace Models
     public class PC
     {
         private static List<PC> _extent = new List<PC>();
+        
+        //Attributes
         private int _computerNumber;
         
-        private Pokecenter _pokecenter;
-        
-        public Pokecenter Pokecenter
-        {
-            get => _pokecenter;
-            set => _pokecenter = value;
-        }
-
         public int ComputerNumber
         {
             get => _computerNumber;
@@ -28,6 +22,17 @@ namespace Models
             }
         }
         
+        //Associations
+        private Pokecenter _pokecenter;
+        
+        public Pokecenter Pokecenter
+        {
+            get => _pokecenter;
+            set => _pokecenter = value;
+        }
+        
+        public static void RemoveFromExtent(PC pc) => _extent.Remove(pc);
+        
         public PC() { }
 
         public PC(int computerNumber, Pokecenter pokecenter)
@@ -35,7 +40,7 @@ namespace Models
             if (pokecenter == null) throw new ArgumentNullException(nameof(pokecenter), "PC must be in a Pokecenter.");
             
             ComputerNumber = computerNumber;
-            _pokecenter = pokecenter;
+            Pokecenter = pokecenter;
             
             _extent.Add(this);
         }
@@ -59,11 +64,9 @@ namespace Models
             return false;
         }
         
-        public static void RemoveFromExtent(PC pc) => _extent.Remove(pc);
-
-        public void AccessStorage()
+        /*public void AccessStorage()
         {
             
-        }
+        }*/
     }
 }
