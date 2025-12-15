@@ -5,9 +5,11 @@ namespace Models;
 [Serializable]
 public class Trainer : Person
 {
+    public int TrainerId { get; }
     private int _totalMoney;
     private string[] _badges = Array.Empty<string>();
     private string _status;
+    public Team? Team { get; internal set; }
 
     public string[] Badges
     {
@@ -45,8 +47,9 @@ public class Trainer : Person
     
     public Trainer() { }
 
-    public Trainer(int totalMoney, string[] badges, string? status, string name, int age) : base(name,age)
+    public Trainer(int trainerId, int totalMoney, string[] badges, string? status, string name, int age) : base(name,age)
     {
+        TrainerId = trainerId;
         TotalMoney = totalMoney;
         Badges = badges;
         Status = status;
