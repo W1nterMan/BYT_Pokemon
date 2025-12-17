@@ -1,13 +1,11 @@
-﻿
-
-namespace Models
+﻿namespace Models
 {
     [Serializable]
     public class Pokecenter : Building
     {
         //Attributes
-        private static double _baseHealingCost = 0; 
-        
+        private static double _baseHealingCost = 0;
+
         public static double BaseHealingCost
         {
             get => _baseHealingCost;
@@ -17,23 +15,36 @@ namespace Models
                 _baseHealingCost = value;
             }
         }
-        
+
         //Associations
         private PC _pc;
 
-        public PC Pc 
-        { 
-            get => _pc; 
-            set => _pc = value; 
+        public PC Pc
+        {
+            get => _pc;
+            set => _pc = value;
         }
-        
+
+        private Nurse _nurse;
+
+        public Nurse Nurse
+        {
+            get=> _nurse;
+            set
+            {
+                if (value == null) throw new ArgumentException("Nurse cannot be null.");
+                _nurse = value;
+            }
+            
+        }
+
         public void AddPc(int computerNumber)
         {
             if (_pc != null) throw new InvalidOperationException("This Pokecenter already has a PC");
-            
+
             _pc = new PC(computerNumber, this);
         }
-        
+
         public void DeletePokecenter()
         {
             if (_pc != null)
@@ -43,7 +54,7 @@ namespace Models
             }
             RemoveFromExtent(this);
         }
-        
+
         public Pokecenter() { }
 
         public Pokecenter(string name, bool isAccessible, Location location, int pcNumber) : base(name, isAccessible, location)
