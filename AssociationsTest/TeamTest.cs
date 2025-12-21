@@ -7,7 +7,7 @@ public class TeamTest
     [Test]
     public void AddTrainerTest()
     {
-        Team team = new Team("Team Red");
+        Team team = new Team();
 
         Trainer trainer = new Trainer(123, 1234, new string[0], "Active", "Hanna", 32);
 
@@ -21,7 +21,7 @@ public class TeamTest
     [Test]
     public void RemoveTrainerTest()
     {
-        Team team = new Team("Team Red");
+        Team team = new Team();
 
         Trainer trainer = new Trainer(1234, 10344, new string[0], "Active", "Maria", 3);
 
@@ -35,8 +35,8 @@ public class TeamTest
     [Test]
     public void TrainerInTwoTeamsTest()
     {
-        Team teamRed = new Team("Team Red");
-        Team teamBlue = new Team("Team Blue");
+        Team teamRed = new Team();
+        Team teamBlue = new Team();
 
         Trainer trainer = new Trainer(12, 1000, new string[0], "Active", "Bubba", 41);
 
@@ -50,7 +50,7 @@ public class TeamTest
     [Test]
     public void DeleteTeamTest()
     {
-        Team teamRed = new Team("Team Red");
+        Team teamRed = new Team();
 
         Trainer trainer = new Trainer(12, 1000, new string[0], "Active", "Bubba", 41);
 

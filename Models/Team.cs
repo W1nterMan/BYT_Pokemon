@@ -24,6 +24,9 @@ public class Team
     //Associations
     private Dictionary<int, Trainer> _trainers = new();
     
+    private Leader _leader;
+    public Leader Leader => _leader;
+    
     public static List<Team> GetTeams()
     {
         return new List<Team>(_extent);
@@ -70,9 +73,11 @@ public class Team
     
     public Team() { }
 
-    public Team(string name)
+    public Team(string name, Leader leader)
     {
         Name = name;
+        _leader = leader ?? throw new ArgumentNullException(nameof(leader));
+        leader.AssignTeam(this);
         _extent.Add(this);
     }
 

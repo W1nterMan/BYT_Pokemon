@@ -1,5 +1,4 @@
-using Models;
-namespace TestProject6.BYT_Pokemon.Models;
+namespace Models;
 
 [Serializable]
 public class Leader : Person
@@ -16,6 +15,9 @@ public class Leader : Person
             _specialPrefix = value;
         }
     }
+    
+    private Team _team;
+    public Team Team => _team;
 
     public Leader() { }
 
@@ -23,4 +25,10 @@ public class Leader : Person
     {
         SpecialPrefix = specialPrefix;
     }
+    
+    internal void AssignTeam(Team team)
+    {
+        _team = team ?? throw new ArgumentNullException(nameof(team));
+    }
+    
 }

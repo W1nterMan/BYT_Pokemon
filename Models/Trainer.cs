@@ -71,6 +71,14 @@ public class Trainer : Person
         }
     }
     
+    // trainer - trainer
+    private Trainer? _challengeTrainer;
+    public Trainer? ChallangeTrainer => _challengeTrainer;
+
+    // trainer - bag
+    private Bag _bag;
+    public Bag Bag => _bag;
+    
     public Trainer() { }
 
     public Trainer(int trainerId, int totalMoney, string[] badges, string? status, string name, int age) : base(name,age)
@@ -79,6 +87,30 @@ public class Trainer : Person
         TotalMoney = totalMoney;
         Badges = badges;
         Status = status;
+        _bag = new Bag(this);
+    }
+    
+    public void ChallengeTrainer(Trainer opponent)
+    {
+        if (opponent == null)
+            throw new ArgumentNullException(nameof(opponent));
+        if (opponent == this)
+            throw new InvalidOperationException("Trainer cannot compete with himself.");
+        if (_challengeTrainer != null || opponent._challengeTrainer != null)
+            throw new InvalidOperationException("One of trainers is already competing.");
+
+        _challengeTrainer = opponent;
+        opponent._challengeTrainer = this;
+    }
+
+    public void StopChallengeTrainer()
+    {
+        if (_challengeTrainer == null)
+            return;
+
+        var tmp = _challengeTrainer;
+        _challengeTrainer = null;
+        tmp._challengeTrainer = null;
     }
 
     // public void Move() {}

@@ -53,6 +53,7 @@ public class PokemonInBag
         }
     }
     
+    [XmlIgnore]
     public Bag Bag
     {
         get => _bag;

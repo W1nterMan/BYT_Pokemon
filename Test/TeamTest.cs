@@ -11,18 +11,26 @@ namespace Test
             var field = typeof(Team).GetField("_extent", BindingFlags.Static | BindingFlags.NonPublic);
             field.SetValue(null, new List<Team>());
         }
+        
+        private Leader CreateLeader(string name = "Asd")
+        {
+            return new Leader(name, 2, "Super");
+        }
+        
 
         [Test]
         public void Team_Attributes()
         {
-            Team team = new Team("Strongers");
+            Leader leader = CreateLeader();
+            Team team = new Team("Strongers", leader);
             Assert.That(team.Name, Is.EqualTo("Strongers"));
         }
 
         [Test]
         public void Team_InvalidAttributes()
         {
-            Team team = new Team();
+            Leader leader = CreateLeader();
+            Team team = new Team("Sus", leader);
             Assert.Throws<ArgumentException>(() => team.Name = "");
             Assert.Throws<ArgumentException>(() => team.Name = "   ");
         }
@@ -30,9 +38,9 @@ namespace Test
         [Test]
         public void Team_Extent()
         {
-            Team team1 = new Team("Strongers");
-            Team team2 = new Team("Winners");
-            Team team3 = new Team("Supers");
+            Team team1 = new Team("Strongers", CreateLeader("Brock"));
+            Team team2 = new Team("Winners", CreateLeader("Misty"));
+            Team team3 = new Team("Supers", CreateLeader("Erika"));
 
             var extent = Team.GetTeams();
             Assert.That(extent.Count, Is.EqualTo(3));
@@ -44,7 +52,7 @@ namespace Test
         [Test]
         public void Team_Encapsulation()
         {
-            Team team = new Team("Strongers");
+            Team team = new Team("Strongers", CreateLeader());
 
             var extent = Team.GetTeams();
             team.Name = "Winners";
@@ -59,9 +67,9 @@ namespace Test
             string path = "team_test.xml";
             if (File.Exists(path)) File.Delete(path);
 
-            Team team1 = new Team("Strongers");
-            Team team2 = new Team("Winners");
-            Team team3 = new Team("Supers");
+            Team team1 = new Team("Strongers", CreateLeader("ASas"));
+            Team team2 = new Team("Winners", CreateLeader("dsa"));
+            Team team3 = new Team("Supers", CreateLeader("asfd"));
 
             Team.Save(path);
 
