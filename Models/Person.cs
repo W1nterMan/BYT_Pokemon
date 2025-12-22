@@ -74,5 +74,7 @@ public abstract class Person
         return false;
     }
 
+    public static void RemoveFromExtent(Person person) => _extent.Remove(person);
+
     public virtual void Contact() { }
 }
