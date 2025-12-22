@@ -1,3 +1,4 @@
+using System.Runtime.InteropServices.ComTypes;
 using Models;
 
 namespace AssociationsTest;
@@ -10,10 +11,10 @@ public class TrainerTrainerTest
         Trainer bubba = new Trainer(1, 1000, [], "Active", "Bubba", 55);
         Trainer hubba = new Trainer(2, 800, [], "Active", "Hubba", 65);
 
-        bubba.ChallengeTrainer(hubba);
+        Battle battle = new Battle("Ongoing", 123, 123, DateTime.Now.AddMinutes(1), null,bubba, hubba );
 
-        Assert.That(bubba.ChallangeTrainer, Is.EqualTo(hubba));
-        Assert.That(bubba.ChallangeTrainer, Is.EqualTo(hubba));
+        Assert.That(bubba.Battles.Contains(battle), Is.True);
+        Assert.That(hubba.Battles.Contains(battle), Is.True);
     }
 
     [Test]
@@ -23,24 +24,25 @@ public class TrainerTrainerTest
         Trainer hubba = new Trainer(2, 800, [], "Active", "Hubba", 65);
         Trainer asd = new Trainer(3, 900, [], "Active", "asd", 88);
 
-        asd.ChallengeTrainer(hubba);
-
+        _ = new Battle("Ongoing", 123, 123, DateTime.Now.AddMinutes(1), null, bubba, hubba);
+        
         Assert.Throws<InvalidOperationException>(() =>
         {
-            asd.ChallengeTrainer(hubba);
+            new Battle("Ongoing", 123, 123, DateTime.Now.AddMinutes(1), null, asd, hubba);
         });
     }
 
     [Test]
-    public void StopChallenge()
+    public void RemoveBattle()
     {
         Trainer bubba = new Trainer(1, 1000, [], "Active", "Bubba", 55);
         Trainer hubba = new Trainer(2, 800, [], "Active", "Hubba", 65);
 
-        bubba.ChallengeTrainer(hubba);
-        bubba.StopChallengeTrainer();
+        Battle battle = new Battle("Finished", 123, 123, DateTime.Now.AddMinutes(1), bubba, bubba, hubba);
+        
+        battle.RemoveBattle();
 
-        Assert.IsNull(bubba.ChallangeTrainer);
-        Assert.IsNull(hubba.ChallangeTrainer);
+        Assert.That(bubba.Battles.Count, Is.EqualTo(0));
+        Assert.That(hubba.Battles.Count, Is.EqualTo(0));
     }
 }

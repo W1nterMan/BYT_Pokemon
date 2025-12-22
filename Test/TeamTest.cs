@@ -11,26 +11,19 @@ namespace Test
             var field = typeof(Team).GetField("_extent", BindingFlags.Static | BindingFlags.NonPublic);
             field.SetValue(null, new List<Team>());
         }
-        
-        private Leader CreateLeader(string name = "Asd")
-        {
-            return new Leader(name, 2, "Super");
-        }
-        
 
         [Test]
         public void Team_Attributes()
         {
-            Leader leader = CreateLeader();
-            Team team = new Team("Strongers", leader);
+            Team team = new Team("Strongers", "Pon", 25, "Super");
             Assert.That(team.Name, Is.EqualTo("Strongers"));
         }
 
         [Test]
         public void Team_InvalidAttributes()
         {
-            Leader leader = CreateLeader();
-            Team team = new Team("Sus", leader);
+            Team team = new Team("Sus", "Pon", 25, "Super");
+
             Assert.Throws<ArgumentException>(() => team.Name = "");
             Assert.Throws<ArgumentException>(() => team.Name = "   ");
         }
@@ -38,11 +31,12 @@ namespace Test
         [Test]
         public void Team_Extent()
         {
-            Team team1 = new Team("Strongers", CreateLeader("Brock"));
-            Team team2 = new Team("Winners", CreateLeader("Misty"));
-            Team team3 = new Team("Supers", CreateLeader("Erika"));
+            new Team("Strongers", "Brock", 25, "Strong");
+            new Team("Winners", "Misty", 23, "Win");
+            new Team("Supers", "Erika", 30, "Sup");
 
             var extent = Team.GetTeams();
+
             Assert.That(extent.Count, Is.EqualTo(3));
             Assert.That(extent.Any(t => t.Name == "Strongers"));
             Assert.That(extent.Any(t => t.Name == "Winners"));
@@ -52,13 +46,12 @@ namespace Test
         [Test]
         public void Team_Encapsulation()
         {
-            Team team = new Team("Strongers", CreateLeader());
+            Team team = new Team("Strongers", "Pos", 25, "Strong");
 
-            var extent = Team.GetTeams();
             team.Name = "Winners";
 
-            var updatedExtent = Team.GetTeams();
-            Assert.That(updatedExtent.First().Name, Is.EqualTo("Winners"));
+            var extent = Team.GetTeams();
+            Assert.That(extent.First().Name, Is.EqualTo("Winners"));
         }
 
         [Test]
@@ -67,9 +60,9 @@ namespace Test
             string path = "team_test.xml";
             if (File.Exists(path)) File.Delete(path);
 
-            Team team1 = new Team("Strongers", CreateLeader("ASas"));
-            Team team2 = new Team("Winners", CreateLeader("dsa"));
-            Team team3 = new Team("Supers", CreateLeader("asfd"));
+            new Team("Strongers", "Brock", 25, "Strong");
+            new Team("Winners", "Misty", 23, "Win");
+            new Team("Supers", "Erika", 30, "Sup");
 
             Team.Save(path);
 

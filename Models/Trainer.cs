@@ -1,3 +1,4 @@
+using System.Xml.Serialization;
 using Models;
 
 namespace Models;
@@ -61,7 +62,8 @@ public class Trainer : Person
             _trainerId = value;
         }
     }
-
+    
+    [XmlIgnore]
     public Team? Team
     {
         get => _team;
@@ -87,6 +89,7 @@ public class Trainer : Person
     // trainer - bag
     private Bag _bag;
     
+    [XmlIgnore]
     public Bag Bag
     {
         get => _bag;
@@ -94,6 +97,7 @@ public class Trainer : Person
     }
 
     //trainer - leader subset
+    [XmlIgnore]
     private HashSet<Leader> _leaders = new HashSet<Leader>();
 
     public void AddLeaderToSet(Leader leader)
@@ -118,6 +122,7 @@ public class Trainer : Person
         Badges = badges;
         Status = status;
         AddBag();
+        _battles = new HashSet<Battle>();
     }
 
     public void AddBattle(Battle battle)

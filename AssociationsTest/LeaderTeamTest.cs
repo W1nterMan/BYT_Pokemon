@@ -7,19 +7,11 @@ public class LeaderTeamTest
     [Test]
     public void LeaderTeamComposition()
     {
-        Leader leader = new Leader("Bubba", 55, "Boo");
-        Team team = new Team("Red", leader);
+        Team team = new Team("Red", "Bubba", 55, "Boo");
 
-        Assert.That(leader.Team, Is.EqualTo(team));
-        Assert.That(team.Leader, Is.EqualTo(leader));
+        Assert.IsNotNull(team.Leader);
+        Assert.That(team.Leader.Team, Is.EqualTo(team));
+        Assert.That(team.Leader.SpecialPrefix, Is.EqualTo("Boo"));
     }
-
-    [Test]
-    public void TeamWithoutLeader()
-    {
-        Assert.Throws<ArgumentNullException>(() =>
-        {
-            new Team("Invalid Team", null);
-        });
-    }
+    
 }

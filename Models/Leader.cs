@@ -1,3 +1,5 @@
+using System.Xml.Serialization;
+
 namespace Models;
 
 [Serializable]
@@ -17,14 +19,12 @@ public class Leader : Person
     }
     
     private Team _team;
+    
+    [XmlIgnore]
     public Team Team
     {
         get => _team;
-        set
-        {
-            if (_team == null) throw new ArgumentNullException("Team cannot be null");
-
-        }
+        set => _team = value;
     }
 
     public Leader() { }

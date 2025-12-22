@@ -39,8 +39,8 @@ public class BuildingTest
     {
         Pokecenter.BaseHealingCost = 50;
 
-        var center1 = new Pokecenter("Center 1", true, _testLocation, 99);
-        var center2 = new Pokecenter("Center 2", true, _testLocation, 11);
+        var center1 = new Pokecenter("Center 1", true, _testLocation, 99,"Joy",100);
+        var center2 = new Pokecenter("Center 2", true, _testLocation, 11, "Joy",100);
         
         Assert.AreEqual(50, Pokecenter.BaseHealingCost);
         

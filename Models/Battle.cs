@@ -1,4 +1,5 @@
-﻿using Models;
+﻿using System.Xml.Serialization;
+using Models;
 
 namespace Models;
 
@@ -57,12 +58,14 @@ public class Battle
         }
     }
 
+    [XmlIgnore]
     public Trainer? Winner { get; set; }
 
     //Associations
     
     private Trainer _trainer1;
 
+    [XmlIgnore]
     public Trainer Trainer1
     {
         get => _trainer1;
@@ -75,6 +78,7 @@ public class Battle
     
     private Trainer _trainer2;
 
+    [XmlIgnore]
     public Trainer Trainer2
     {
         get => _trainer2;
@@ -89,6 +93,12 @@ public class Battle
     
     public Battle(string status, int battleXp, int moneyIncome, DateTime time, Trainer? winner, Trainer trainer1, Trainer trainer2)
     {
+        
+        if (trainer1.Battles.Any(b => b.Status == "Ongoing") || trainer2.Battles.Any(b => b.Status == "Ongoing"))
+        {
+            throw new InvalidOperationException("Trainer is already in an ongoing battle.");
+        }
+        
         Status = status;
         BattleXp = battleXp;
         MoneyIncome = moneyIncome;
@@ -105,8 +115,8 @@ public class Battle
     
     public void RemoveBattle()
     {
-        _trainer1.RemoveBattle(this);
-        _trainer2.RemoveBattle(this);
+        _trainer1?.RemoveBattle(this);
+        _trainer2?.RemoveBattle(this);
 
         _extent.Remove(this);
     }

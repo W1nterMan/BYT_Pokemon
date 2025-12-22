@@ -1,3 +1,4 @@
+using System.Xml.Serialization;
 using Models;
 
 namespace Models;
@@ -25,19 +26,20 @@ public class Team
     private Dictionary<int, Trainer> _trainers = new();
     
     private Leader _leader;
+    [XmlIgnore]
     public Leader Leader
     {
         get => _leader;
         set
         {
-            if (_leader == null) throw new NullReferenceException("Leader cannot be null");
-            _leader = value;
+            if (_leader != null) throw new InvalidOperationException("This team already has leader");
+            _leader = value ?? throw new ArgumentNullException(nameof(value));
         }
     }
 
     public void AddLeader(string name, int age, string prefix)
     {
-        if (_leader == null) throw new InvalidOperationException("This team already has leader");
+        if (_leader != null) throw new InvalidOperationException("This team already has leader");
         new Leader(name, age, prefix, this);
     }
     
@@ -94,8 +96,9 @@ public class Team
     public Team(string name, string trainerName, int age, string prefix)
     {
         Name = name;
-        AddLeader(name, age, prefix);
         _extent.Add(this);
+        AddLeader(trainerName, age, prefix);
+        
     }
 
     public static void Save(string path = "teams.xml")

@@ -1,4 +1,6 @@
-﻿namespace Models
+﻿using System.Xml.Serialization;
+
+namespace Models
 {
     [Serializable]
     public class Pokecenter : Building
@@ -27,6 +29,7 @@
 
         private Nurse _nurse;
 
+        [XmlIgnore]
         public Nurse Nurse
         {
             get => _nurse;
