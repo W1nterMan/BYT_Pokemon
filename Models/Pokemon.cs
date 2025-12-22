@@ -193,6 +193,58 @@ public class Pokemon
             }
         }
     }
+
+    private HashSet<Bush> _bushes = new HashSet<Bush>();
+
+    public HashSet<Bush> GetBushes() => new HashSet<Bush>(_bushes);
+
+    public void AddBush(Bush bush)
+    {
+        if (_bushes.Contains(bush))
+        {
+            return;
+        }
+
+        bool added = false;
+
+        try
+        {
+            _bushes.Add(bush);
+            added = true;
+            bush.AddPokemon(this);
+        }
+        catch (Exception e)
+        {
+            if (added)
+            {
+                _bushes.Remove(bush);
+            }
+        }
+    }
+
+    public void RemoveBush(Bush bush)
+    {
+        if (!_bushes.Contains(bush))
+        {
+            return;
+        }
+
+        bool removed = false;
+
+        try
+        {
+            _bushes.Remove(bush);
+            removed = true;
+            bush.RemovePokemon(this);
+        }
+        catch (Exception e)
+        {
+            if (removed)
+            {
+                _bushes.Add(bush);
+            }
+        }
+    }
     
     public Pokemon(){}
     
