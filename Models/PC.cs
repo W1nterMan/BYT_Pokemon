@@ -28,7 +28,10 @@ namespace Models
         public Pokecenter Pokecenter
         {
             get => _pokecenter;
-            set => _pokecenter = value;
+            set {
+                if (value == null) throw new ArgumentNullException(nameof(value), "PC must be in a Pokecenter.");
+                _pokecenter = value;
+            }
         }
         
         public static void RemoveFromExtent(PC pc) => _extent.Remove(pc);
@@ -37,8 +40,6 @@ namespace Models
 
         public PC(int computerNumber, Pokecenter pokecenter)
         {
-            if (pokecenter == null) throw new ArgumentNullException(nameof(pokecenter), "PC must be in a Pokecenter.");
-            
             ComputerNumber = computerNumber;
             Pokecenter = pokecenter;
             
