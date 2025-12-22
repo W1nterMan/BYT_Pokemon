@@ -3,8 +3,8 @@ namespace Models;
 //[Serializable]
 public class Bag
 {
-    //private static List<Bag> _extent = new List<Bag>();
-    
+    private static List<Bag> _extent = new List<Bag>();
+
     //Attributes
     private static int _maximumQuantity = 6;
 
@@ -17,20 +17,33 @@ public class Bag
             _maximumQuantity = MaximumQuantity;
         }
     }
-    
+
     //Associations
-    
-    private HashSet<PokemonInBag> _pokemonsInBag=new HashSet<PokemonInBag>();
-    
+
+    private HashSet<PokemonInBag> _pokemonsInBag = new HashSet<PokemonInBag>();
+
     private Trainer _owner;
-    public Trainer Owner => _owner;
-    
+
+    public Trainer Owner
+    {
+        get => _owner;
+        set
+        {
+            if (value == null) throw new ArgumentNullException("Owner cannot be null");
+            _owner = value;
+        }
+    }
+
     public Bag(Trainer owner)
     {
-        _owner = owner ?? throw new ArgumentNullException(nameof(owner));
+        Owner = owner;
+        owner.Bag = this;
+
+        _extent.Add(this);
     }
-    
+
     public HashSet<PokemonInBag> OpenBag() => new HashSet<PokemonInBag>(_pokemonsInBag);
+
     public void StorePokemon(PokemonInBag pokemon)
     {
         if (pokemon == null) throw new ArgumentNullException(nameof(pokemon));
@@ -45,21 +58,24 @@ public class Bag
         _pokemonsInBag.Remove(pokemon);
         return pokemon;
     }
-     
-    /* public static void Save(string path = "bags.xml")
-     {
-         Serializer.Save(path, _extent);
-     }
 
-     public static bool Load(string path = "bags.xml")
-     {
-         var loadedList = Serializer.Load(path, _extent);
+    public static void RemoveFromExtent(Bag bag) => _extent.Remove(bag);
 
-         if (loadedList != null)
-         {
-             _extent = loadedList;
-             return true;
-         }
-         return false;
-     }*/
+    public static void Save(string path = "bags.xml")
+    {
+        Serializer.Save(path, _extent);
+    }
+
+    public static bool Load(string path = "bags.xml")
+    {
+        var loadedList = Serializer.Load(path, _extent);
+
+        if (loadedList != null)
+        {
+            _extent = loadedList;
+            return true;
+        }
+
+        return false;
+    }
 }

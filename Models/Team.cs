@@ -34,6 +34,12 @@ public class Team
             _leader = value;
         }
     }
+
+    public void AddLeader(string name, int age, string prefix)
+    {
+        if (_leader == null) throw new InvalidOperationException("This team already has leader");
+        new Leader(name, age, prefix, this);
+    }
     
     public static List<Team> GetTeams()
     {
@@ -75,17 +81,20 @@ public class Team
         {
             trainer.Team = null;
         }
+        
+        //not how it should be after inheritance. TODO: change when inheritance implemented
+        Person.RemoveFromExtent(_leader);
+        
         _trainers.Clear();
         _extent.Remove(this);
     }
     
     public Team() { }
 
-    public Team(string name, Leader leader)
+    public Team(string name, string trainerName, int age, string prefix)
     {
         Name = name;
-        _leader = leader ?? throw new ArgumentNullException(nameof(leader));
-        leader.Team = this;
+        AddLeader(name, age, prefix);
         _extent.Add(this);
     }
 
