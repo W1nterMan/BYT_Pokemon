@@ -17,18 +17,22 @@ public class Leader : Person
     }
     
     private Team _team;
-    public Team Team => _team;
+    public Team Team
+    {
+        get => _team;
+        set
+        {
+            if (_team == null) throw new ArgumentNullException("Team cannot be null");
+
+        }
+    }
 
     public Leader() { }
 
-    public Leader(string name, int age, string specialPrefix) : base(name, age)
+    public Leader(string name, int age, string specialPrefix, Team team) : base(name, age)
     {
         SpecialPrefix = specialPrefix;
+        Team = team;
+        team.Leader = this;
     }
-    
-    internal void AssignTeam(Team team)
-    {
-        _team = team ?? throw new ArgumentNullException(nameof(team));
-    }
-    
 }

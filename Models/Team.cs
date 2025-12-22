@@ -25,7 +25,15 @@ public class Team
     private Dictionary<int, Trainer> _trainers = new();
     
     private Leader _leader;
-    public Leader Leader => _leader;
+    public Leader Leader
+    {
+        get => _leader;
+        set
+        {
+            if (_leader == null) throw new NullReferenceException("Leader cannot be null");
+            _leader = value;
+        }
+    }
     
     public static List<Team> GetTeams()
     {
@@ -77,7 +85,7 @@ public class Team
     {
         Name = name;
         _leader = leader ?? throw new ArgumentNullException(nameof(leader));
-        leader.AssignTeam(this);
+        leader.Team = this;
         _extent.Add(this);
     }
 

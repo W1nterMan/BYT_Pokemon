@@ -78,6 +78,15 @@ public class Trainer : Person
     // trainer - bag
     private Bag _bag;
     public Bag Bag => _bag;
+
+    //trainer - leader subset
+    private HashSet<Leader> _leaders = new HashSet<Leader>();
+
+    public void AddLeaderToSet(Leader leader)
+    {
+        if (leader == null) throw new ArgumentNullException("Leader cannot be null");
+        _leaders.Add(leader);
+    }
     
     public Trainer() { }
 
