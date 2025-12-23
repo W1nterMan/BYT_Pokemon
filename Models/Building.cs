@@ -16,6 +16,7 @@ namespace Models
         
         private Location _location; 
         
+        [XmlIgnore]
         public Location Location 
         { 
             get => _location;

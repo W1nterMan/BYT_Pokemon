@@ -1,5 +1,6 @@
-using Models;
-namespace TestProject6.BYT_Pokemon.Models;
+using System.Xml.Serialization;
+
+namespace Models;
 
 [Serializable]
 public class Leader : Person
@@ -16,11 +17,22 @@ public class Leader : Person
             _specialPrefix = value;
         }
     }
+    
+    private Team _team;
+    
+    [XmlIgnore]
+    public Team Team
+    {
+        get => _team;
+        set => _team = value;
+    }
 
     public Leader() { }
 
-    public Leader(string name, int age, string specialPrefix) : base(name, age)
+    public Leader(string name, int age, string specialPrefix, Team team) : base(name, age)
     {
         SpecialPrefix = specialPrefix;
+        Team = team;
+        team.Leader = this;
     }
 }

@@ -15,14 +15,15 @@ namespace Test
         [Test]
         public void Team_Attributes()
         {
-            Team team = new Team("Strongers");
+            Team team = new Team("Strongers", "Pon", 25, "Super");
             Assert.That(team.Name, Is.EqualTo("Strongers"));
         }
 
         [Test]
         public void Team_InvalidAttributes()
         {
-            Team team = new Team();
+            Team team = new Team("Sus", "Pon", 25, "Super");
+
             Assert.Throws<ArgumentException>(() => team.Name = "");
             Assert.Throws<ArgumentException>(() => team.Name = "   ");
         }
@@ -30,11 +31,12 @@ namespace Test
         [Test]
         public void Team_Extent()
         {
-            Team team1 = new Team("Strongers");
-            Team team2 = new Team("Winners");
-            Team team3 = new Team("Supers");
+            new Team("Strongers", "Brock", 25, "Strong");
+            new Team("Winners", "Misty", 23, "Win");
+            new Team("Supers", "Erika", 30, "Sup");
 
             var extent = Team.GetTeams();
+
             Assert.That(extent.Count, Is.EqualTo(3));
             Assert.That(extent.Any(t => t.Name == "Strongers"));
             Assert.That(extent.Any(t => t.Name == "Winners"));
@@ -44,13 +46,12 @@ namespace Test
         [Test]
         public void Team_Encapsulation()
         {
-            Team team = new Team("Strongers");
+            Team team = new Team("Strongers", "Pos", 25, "Strong");
 
-            var extent = Team.GetTeams();
             team.Name = "Winners";
 
-            var updatedExtent = Team.GetTeams();
-            Assert.That(updatedExtent.First().Name, Is.EqualTo("Winners"));
+            var extent = Team.GetTeams();
+            Assert.That(extent.First().Name, Is.EqualTo("Winners"));
         }
 
         [Test]
@@ -59,9 +60,9 @@ namespace Test
             string path = "team_test.xml";
             if (File.Exists(path)) File.Delete(path);
 
-            Team team1 = new Team("Strongers");
-            Team team2 = new Team("Winners");
-            Team team3 = new Team("Supers");
+            new Team("Strongers", "Brock", 25, "Strong");
+            new Team("Winners", "Misty", 23, "Win");
+            new Team("Supers", "Erika", 30, "Sup");
 
             Team.Save(path);
 

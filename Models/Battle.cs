@@ -1,4 +1,5 @@
-﻿using Models;
+﻿using System.Xml.Serialization;
+using Models;
 
 namespace Models;
 
@@ -57,18 +58,67 @@ public class Battle
         }
     }
 
+    [XmlIgnore]
     public Trainer? Winner { get; set; }
+
+    //Associations
+    
+    private Trainer _trainer1;
+
+    [XmlIgnore]
+    public Trainer Trainer1
+    {
+        get => _trainer1;
+        set
+        {
+            if (value == null) throw new ArgumentNullException("Trainer cannot be null");
+            _trainer1 = value;
+        }
+    }
+    
+    private Trainer _trainer2;
+
+    [XmlIgnore]
+    public Trainer Trainer2
+    {
+        get => _trainer2;
+        set
+        {
+            if (value == null) throw new ArgumentNullException("Trainer cannot be null");
+            _trainer2 = value;
+        }
+    }
 
     public Battle() { }
     
-    public Battle(string status, int battleXp, int moneyIncome, DateTime time, Trainer? winner)
+    public Battle(string status, int battleXp, int moneyIncome, DateTime time, Trainer? winner, Trainer trainer1, Trainer trainer2)
     {
+        
+        if (trainer1.Battles.Any(b => b.Status == "Ongoing") || trainer2.Battles.Any(b => b.Status == "Ongoing"))
+        {
+            throw new InvalidOperationException("Trainer is already in an ongoing battle.");
+        }
+        
         Status = status;
         BattleXp = battleXp;
         MoneyIncome = moneyIncome;
         Time = time;
         Winner = winner;
+
+        Trainer1 = trainer1;
+        Trainer2 = trainer2;
+        Trainer1.AddBattle(this);
+        Trainer2.AddBattle(this);
+        
         AddBattle(this);
+    }
+    
+    public void RemoveBattle()
+    {
+        _trainer1?.RemoveBattle(this);
+        _trainer2?.RemoveBattle(this);
+
+        _extent.Remove(this);
     }
 
     private static void AddBattle(Battle battle)

@@ -10,7 +10,9 @@ public class PokemonInBagTest
         Nature adamant = new Nature("Adamant",1,2);
         Fire firePokemonA = new Fire(
             1, "fireA", 100, 100, 100, [1, 1, 1, 1, 1, 1], adamant, 100);
-        Bag bagA = new Bag();
+        Trainer trainer = new Trainer(123, 1234, new string[0], "Active", "Hanna", 32);
+        Bag bagA = trainer.Bag;
+
         
         PokemonInBag fire_bagA=new PokemonInBag(firePokemonA, bagA,"Ultra ball");
         PokemonInBag fire2_bagA=new PokemonInBag(firePokemonA, bagA,"Super ball");
@@ -28,7 +30,9 @@ public class PokemonInBagTest
         Nature naughty = new Nature("Naughty",0,3);
         Fire firePokemonA = new Fire(
             1, "fireA", 100, 100, 100, [1, 1, 1, 1, 1, 1], naughty, 100);
-        Bag bagA = new Bag();
+        Trainer trainer = new Trainer(1, 1000, new string[0], "Active", "Ash", 16);
+        Bag bagA = trainer.Bag;
+
         
         PokemonInBag fire_bagA=new PokemonInBag(firePokemonA, bagA,"Ultra ball");
         PokemonInBag fire2_bagA=new PokemonInBag(firePokemonA, bagA,"Super ball");
@@ -45,7 +49,9 @@ public class PokemonInBagTest
         Nature calm = new Nature("Calm",0,3);
         Fire firePokemon1 = new Fire(
             1, "fireA", 100, 100, 100, [1, 1, 1, 1, 1, 1], calm, 100);
-        Bag bagA = new Bag();
+        Trainer trainer = new Trainer(123, 1234, new string[0], "Active", "Hanna", 32);
+        Bag bagA = trainer.Bag;
+
         
         PokemonInBag p1_bagA=new PokemonInBag(firePokemon1, bagA,"Ultra ball");
         PokemonInBag p2_bagA=new PokemonInBag(firePokemon1, bagA,"Ultra ball");

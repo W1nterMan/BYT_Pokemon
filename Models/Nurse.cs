@@ -1,3 +1,4 @@
+using System.Xml.Serialization;
 using Models;
 
 namespace Models;
@@ -9,6 +10,7 @@ public class Nurse : Person
     
     private Pokecenter _pokecenter;
 
+    [XmlIgnore]
     public Pokecenter Pokecenter
     {
         get => _pokecenter; 

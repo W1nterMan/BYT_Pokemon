@@ -1,3 +1,4 @@
+using System.Xml.Serialization;
 using Models;
 
 namespace Models;
@@ -61,7 +62,8 @@ public class Trainer : Person
             _trainerId = value;
         }
     }
-
+    
+    [XmlIgnore]
     public Team? Team
     {
         get => _team;
@@ -69,6 +71,46 @@ public class Trainer : Person
         {
             _team = value;
         }
+    }
+    
+    // trainer - trainer
+    private HashSet<Battle> _battles;
+
+    public HashSet<Battle> Battles
+    {
+        get => _battles;
+    }
+
+    public void RemoveBattle(Battle battle)
+    {
+        _battles.Remove(battle);
+    }
+
+    // trainer - bag
+    private Bag _bag;
+    
+    [XmlIgnore]
+    public Bag Bag
+    {
+        get => _bag;
+        set => _bag = value;
+    }
+
+    //trainer - leader subset
+    [XmlIgnore]
+    private HashSet<Leader> _leaders = new HashSet<Leader>();
+
+    public void AddLeaderToSet(Leader leader)
+    {
+        if (leader == null) throw new ArgumentNullException("Leader cannot be null");
+        _leaders.Add(leader);
+    }
+
+    public void AddBag()
+    {
+        if (_bag != null) throw new InvalidOperationException("This Pokecenter already has a PC");
+
+        new Bag(this); 
     }
     
     public Trainer() { }
@@ -79,7 +121,63 @@ public class Trainer : Person
         TotalMoney = totalMoney;
         Badges = badges;
         Status = status;
+        AddBag();
+        _battles = new HashSet<Battle>();
     }
+
+    public void AddBattle(Battle battle)
+    {
+        _battles.Add(battle);
+    }
+    
+    public void DeleteTrainer()
+    {
+        if (_bag != null)
+        {
+            Bag.RemoveFromExtent(_bag);
+        }
+
+        if (_team == null)
+        {
+            Team.RemoveTeamMember(this.TrainerId);
+        }
+
+        //IDK how to implement, need to ask teacher.
+        /*foreach (var battle in _battles)
+        {
+            if (battle.Trainer1 == this)
+            {
+                battle.Trainer1 = null;
+            }
+        }*/
+
+        // if (_leaders.Contains(this))
+
+        RemoveFromExtent(this);
+    }
+
+    /*public void ChallengeTrainer(Trainer opponent)
+    {
+        if (opponent == null)
+            throw new ArgumentNullException(nameof(opponent));
+        if (opponent == this)
+            throw new InvalidOperationException("Trainer cannot compete with himself.");
+        if (_challengeTrainer != null || opponent._challengeTrainer != null)
+            throw new InvalidOperationException("One of trainers is already competing.");
+
+        _challengeTrainer = opponent;
+        opponent._challengeTrainer = this;
+    }
+
+    public void StopChallengeTrainer()
+    {
+        if (_challengeTrainer == null)
+            return;
+
+        var tmp = _challengeTrainer;
+        _challengeTrainer = null;
+        tmp._challengeTrainer = null;
+    }*/
 
     // public void Move() {}
     // public void ChangeActivePokemon() {}

@@ -24,14 +24,18 @@ public class PokemonInBagTest
     [Test]
     public void PokemonInBag_Invalid_Argument_ThrowException()
     {
-        Bag bag = new Bag();
+        Trainer trainer = new Trainer(123, 1234, new string[0], "Active", "Hanna", 32);
+        Bag bag = trainer.Bag;
+
         Assert.Throws<ArgumentException>(()=>new PokemonInBag(pikachu,bag,""));
     }
     
     [Test]
     public void PokemonInBag_Extent_Test()
     {
-        Bag bag = new Bag();
+        Trainer trainer = new Trainer(123, 1234, new string[0], "Active", "Hanna", 32);
+        Bag bag = trainer.Bag;
+
         PokemonInBag pokemonA = new PokemonInBag(pikachu,bag,"Ultra Ball");
         PokemonInBag pokemonB = new PokemonInBag(pikachu,bag,"Special Ball");
 
@@ -44,7 +48,9 @@ public class PokemonInBagTest
     [Test]
     public void PokemonInBag_Encapsulation_Test()
     {
-        Bag bag = new Bag();
+        Trainer trainer = new Trainer(123, 1234, new string[0], "Active", "Hanna", 32);
+        Bag bag = trainer.Bag;
+
         PokemonInBag pokemonA = new PokemonInBag(pikachu,bag,"Ultra Ball");
         PokemonInBag pokemonB = new PokemonInBag(pikachu,bag,"Special Ball");
 
@@ -62,7 +68,9 @@ public class PokemonInBagTest
     [Test]
     public void PokemonInBag_Persistence_Test()
     {
-        Bag bag = new Bag();
+        Trainer trainer = new Trainer(123, 1234, new string[0], "Active", "Hanna", 32);
+        Bag bag = trainer.Bag;
+
         string TestPath = "test_pokemons_in_bag.xml";
         
         if (File.Exists(TestPath)) File.Delete(TestPath);
