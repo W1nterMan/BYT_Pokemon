@@ -1,14 +1,22 @@
 ﻿namespace Models;
 
 [Serializable]
-public class Flying : Pokemon
+public class Flying 
 {
-    public bool CanFly { get; set; }
-
+    private static List<Flying> _extent=new List<Flying>();
+    private Pokemon _pokemon;
+    public Pokemon Pokemon => _pokemon;
+    private bool _canFly;
+    public bool CanFly => _canFly;
+    
     public Flying(){}
-    public Flying(int id, string name, int healthPoints, int expPoints, double weight, int[] baseStats,Nature nature, bool canFly) :
-        base(id, name, healthPoints, expPoints, weight, baseStats,nature)
+    public Flying(Pokemon pokemon, bool canFly) 
     {
-        CanFly =  canFly;
+        _pokemon = pokemon;
+        _canFly =  canFly;
+        _extent.Add(this);
     }
+    
+    public List<Flying> GetExtent() => new List<Flying>(_extent);
+    public static void RemoveFromExtent(Flying flying)=>_extent.Remove(flying);
 }

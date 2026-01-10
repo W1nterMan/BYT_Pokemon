@@ -9,7 +9,7 @@ namespace Models;
 [XmlInclude(typeof(Water))]
 [XmlInclude(typeof(Land))]
 [XmlInclude(typeof(Underwater))]
-public class Pokemon
+public class Pokemon 
 {
     private static List<Pokemon> _extent = new List<Pokemon>();
     
@@ -141,8 +141,9 @@ public class Pokemon
             _evolvesTo = value;
         }
     }
-    
-    public Nature Nature { get;  }
+
+    private Nature _nature;
+    public Nature Nature => _nature;
     
     private HashSet<PokemonInBag>  _pokemonsInBag = new HashSet<PokemonInBag>();
     
@@ -245,21 +246,55 @@ public class Pokemon
             }
         }
     }
+
+    //inheritance
+    private Fire? _fire;
+    private Water? _water;
+    private Flying? _flying;
+
+    public Fire? Fire => _fire;
+    public Water? Water => _water;
+    public Flying? Flying => _flying;
+
+    private Underwater? _underwater;
+    private Land? _land;
+
+    public Underwater? Underwater => _underwater;
+    public Land? Land => _land;
+
     
     public Pokemon(){}
-    
-    public Pokemon(int id, string name, int healthPoints, int expPoints, double weight, int[] baseStats, Nature nature)
+
+    public Pokemon Set(PokemonBuilder builder)
     {
-        Id = id;
-        Name = name;
-        HealthPoints = healthPoints;
-        ExpPoints = expPoints;
-        Weight = weight;
-        BaseStats = baseStats;
+        Id = builder.Id;
+        Name = builder.Name;
+        HealthPoints = builder.HealthPoints;
+        ExpPoints = builder.ExpPoints;
+        Weight = builder.Weight;
+        BaseStats = builder.BaseStats;
         
-        Nature = nature;
-        nature.AddPokemon(this);
+        _nature=builder.Nature;
+        Nature.AddPokemon(this);
+
+        if (builder.Fire == null && builder.Water == null && builder.Flying == null)
+        {
+            throw new ArgumentException("Pokemon must have at least one type");
+        }
+        
+        _fire=builder.Fire;
+        _water=builder.Water;
+        _flying=builder.Flying;
+
+        if ((builder.Land == null && builder.Underwater == null) || (builder.Land != null && builder.Underwater != null) )
+        {
+            throw new ArgumentException("Pokemon must have only one egg type");
+        }
+        
+        _underwater = builder.Underwater;
+        _land = builder.Land;
         AddPokemon(this);
+        return this;
     }
 
     private static void AddPokemon(Pokemon pokemon)
@@ -296,6 +331,31 @@ public class Pokemon
         {
             Nature.RemovePokemon(this);
         }
+
+        if (Fire != null)
+        {
+            Fire.RemoveFromExtent(Fire);
+        }
+        
+        if (Water != null)
+        {
+            Water.RemoveFromExtent(Water);
+        }
+        
+        if (Flying != null)
+        {
+            Flying.RemoveFromExtent(Flying);
+        }
+        
+        if (Land != null)
+        {
+            Land.RemoveFromExtent(Land);
+        }
+        
+        if (Underwater != null)
+        {
+            Underwater.RemoveFromExtent(Underwater);
+        }
         
         _extent.Remove(this);
     }
@@ -327,4 +387,75 @@ public enum StatusEnum
 {
     Active,
     Defeated
+}
+
+public class PokemonBuilder
+{
+    private  Pokemon _pokemon;
+    private Fire _fire;
+    private  Water _water;
+    private Flying _flying;
+    private  Underwater _underwater;
+    private Land _land;
+    
+    public int Id { get; }
+    public string Name { get; }
+    public  int HealthPoints { get; }
+    public  int ExpPoints { get; }
+    public   double Weight { get; }
+    public   int[] BaseStats { get; }
+    public Nature Nature { get; }
+    public Fire Fire => _fire;
+    public Water Water => _water;
+    public Flying Flying => _flying;
+    public Underwater? Underwater => _underwater;
+    public  Land? Land => _land;
+
+    public PokemonBuilder(int id, string name, int healthPoints, int expPoints, double weight, int[] baseStats,
+        Nature nature)
+    {
+        Id = id;
+        Name = name;
+        HealthPoints = healthPoints;
+        ExpPoints = expPoints;
+        Weight = weight;
+        BaseStats = baseStats;
+        Nature = nature;
+        _pokemon = new Pokemon();
+    }
+
+    public PokemonBuilder FireType(double bodyTemperature)
+    { 
+        _fire = new Fire(_pokemon, bodyTemperature);
+        return this;
+    }
+
+    public PokemonBuilder WaterType(bool canSwim)
+    {
+        _water = new Water(_pokemon, canSwim);
+        return this;
+    }
+
+    public PokemonBuilder FlyingType(bool canFly)
+    {
+        _flying = new Flying(_pokemon, canFly);
+        return this;
+    }
+
+    public PokemonBuilder UnderwaterEggType()
+    {
+        _underwater = new Underwater(_pokemon);
+        return this;
+    }
+
+    public PokemonBuilder LandEggType(int autoHealPoint)
+    {
+        _land = new Land(_pokemon, autoHealPoint);
+        return this;
+    }
+
+    public Pokemon Build()
+    {
+        return _pokemon.Set(this);
+    }
 }
