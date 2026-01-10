@@ -18,7 +18,10 @@ public class PokemonInBagTest
         nature.SetValue(null, new List<Nature>());
         
         brave = new Nature("Brave", 1, 2);
-        pikachu = new Pokemon(1, "Charmander", 20, 1, 40, new int[]{1,1,1,1,1,1}, brave);
+        pikachu = new PokemonBuilder(1, "Charmander", 20, 1, 40, new int[]{1,1,1,1,1,1}, brave)
+                                     .FireType(30)
+                                     .LandEggType(10)
+                                     .Build();
     }
     
     [Test]

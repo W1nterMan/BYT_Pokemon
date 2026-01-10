@@ -1,9 +1,11 @@
 ﻿using Models;
+using NUnit.Framework.Internal;
 
 namespace AssociationsTest;
 
 public class BushTest
 {
+    private Nature _gentle = new Nature("Gentle", 1, 2);
     [Test]
     public void Add_Pokemon_To_Bush_Test()
     {
@@ -13,9 +15,11 @@ public class BushTest
 
         var bush1 = new Bush(true, road);
 
-        Nature gentle = new Nature("Gentle", 1, 2);
-        Pokemon pokemonA = new Pokemon(
-            1, "pokemonA", 100, 100, 100, [1, 1, 1, 1, 1, 1], gentle);
+        Pokemon pokemonA = new PokemonBuilder(
+            1, "fireA", 100, 100, 100, [1, 1, 1, 1, 1, 1], _gentle)
+            .FireType(100)
+            .LandEggType(10)
+            .Build();;
 
         bush1.AddPokemon(pokemonA);
 
@@ -34,9 +38,11 @@ public class BushTest
 
         var bush1 = new Bush(true, road);
 
-        Nature careful = new Nature("Careful", 1, 2);
-        Pokemon pokemonA = new Pokemon(
-            1, "pokemonA", 100, 100, 100, [1, 1, 1, 1, 1, 1], careful);
+        Pokemon pokemonA = new PokemonBuilder(
+            1, "fireA", 100, 100, 100, [1, 1, 1, 1, 1, 1], _gentle)
+            .FireType(100)
+            .LandEggType(10)
+            .Build();
 
         bush1.AddPokemon(pokemonA);
         bush1.RemovePokemon(pokemonA);

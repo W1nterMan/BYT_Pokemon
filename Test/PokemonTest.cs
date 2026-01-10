@@ -15,29 +15,36 @@ public class PokemonTest
     private static Nature _nature = new Nature("Brave", 1, 2);
     private static object[] _testcases =
     {
-        new object[] { 0, "pokemonA", 100, 100, 100, new[] { 1, 1, 1, 1, 1, 1 }, _nature },
-        new object[] { 1, "", 100, 100, 100, new[] { 1, 1, 1, 1, 1, 1 }, _nature },
-        new object[] { 1, "pokemonA", -1, 100, 100, new[] { 1, 1, 1, 1, 1, 1 }, _nature },
-        new object[] { 1, "pokemonA", 100, -1, 100, new[] { 1, 1, 1, 1, 1, 1 }, _nature },
-        new object[] { 1, "pokemonA", 100, 100, 0, new[] { 1, 1, 1, 1, 1, 1 }, _nature },
-        new object[] { 1, "pokemonA", 100, 100, 100, new[] { 1, 1, 1, 1, 1 }, _nature },
+        new object[] { 0, "pokemonA", 100, 100, 100, new[] { 1, 1, 1, 1, 1, 1 }, _nature, 30},
+        new object[] { 1, "", 100, 100, 100, new[] { 1, 1, 1, 1, 1, 1 }, _nature, 30 },
+        new object[] { 1, "pokemonA", -1, 100, 100, new[] { 1, 1, 1, 1, 1, 1 }, _nature, 30 },
+        new object[] { 1, "pokemonA", 100, -1, 100, new[] { 1, 1, 1, 1, 1, 1 }, _nature, 30 },
+        new object[] { 1, "pokemonA", 100, 100, 0, new[] { 1, 1, 1, 1, 1, 1 }, _nature, 30 },
+        new object[] { 1, "pokemonA", 100, 100, 100, new[] { 1, 1, 1, 1, 1 }, _nature, 30 },
     };
     
    [TestCaseSource(nameof(_testcases))]
     public void Pokemon_Invalid_Argument_ThrowException
     (int id, string name,int healthPoints,
-        int expPoints,double weight,int[] baseStats,Nature nature)
+        int expPoints,double weight,int[] baseStats,Nature nature, double bodyTemperature)
     {
-        Assert.Throws<ArgumentException>(()=>new Pokemon(id,name,healthPoints,expPoints,weight,baseStats,nature));
+        Assert.Throws<ArgumentException>(()=>new PokemonBuilder(id,name,healthPoints,expPoints,weight,baseStats,nature)
+                                                                .FireType(bodyTemperature)
+                                                                .LandEggType(10)
+                                                                .Build());
     }
     
     [Test]
     public void Pokemon_Nullable_Status_Test()
     {
-        Pokemon pokemonA=new Pokemon(
-            1,"pokemonA",100,100,100,[1,1,1,1,1,1], _nature);
-        Pokemon pokemonB=new Pokemon(
-            1,"pokemonB",100,100,100,[1,1,1,1,1,1], _nature);
+        Pokemon pokemonA=new PokemonBuilder(1, "pokemonA", 20, 1, 40, new int[]{1,1,1,1,1,1}, _nature)
+                                            .FireType(30)
+                                            .LandEggType(10)
+                                            .Build();
+        Pokemon pokemonB=new PokemonBuilder(2, "pokemonB", 20, 1, 40, new int[]{1,1,1,1,1,1}, _nature)
+                                            .FireType(30)
+                                            .LandEggType(10)
+                                            .Build();
         Assert.IsNull(pokemonA.Status);
         Assert.IsNull(pokemonB.Status);
         pokemonA.Status = nameof(StatusEnum.Active);
@@ -48,30 +55,44 @@ public class PokemonTest
     [Test]
     public void Fire_Pokemon_Valid_And_Invalid_Test()
     {
-        Fire fireValid=new Fire(
-            1,"fireA",100,100,100,[1,1,1,1,1,1], _nature, 100);
+        Pokemon fireValid=new PokemonBuilder(
+            1,"fireA",100,100,100,[1,1,1,1,1,1], _nature)
+            .FireType(100)
+            .LandEggType(10)
+            .Build();
         Assert.Throws<ArgumentException>(() => 
-            new Fire(
-                1, "fireB", 100, 100, 100, [1, 1, 1, 1, 1, 1], _nature, 0));
-        Assert.That(fireValid.BodyTemperature, Is.EqualTo(100));
+            new PokemonBuilder(
+                2, "fireB", 100, 100, 100, [1, 1, 1, 1, 1, 1], _nature)
+                .FireType(0)
+                .LandEggType(10)
+                .Build());
+        Assert.That(fireValid.Fire.BodyTemperature, Is.EqualTo(100));
     }
     
+    //remove egg type instantiation test
     [Test]
     public void Land_Pokemon_Valid_And_Invalid_Test()
     {
-        Land landValid=new Land(
-            1,"landA",100,100,100,[1,1,1,1,1,1], _nature,100);
+        Pokemon landValid=new PokemonBuilder(
+            1,"landA",100,100,100,[1,1,1,1,1,1], _nature)
+            .FireType(30).LandEggType(100).Build();
         Assert.Throws<ArgumentException>(() => 
-            new Land(
-                1, "fireB", 100, 100, 100, [1, 1, 1, 1, 1, 1], _nature, -1));
-        Assert.That(landValid.AutoHealPoint,Is.EqualTo(100));
+            new PokemonBuilder(
+                1, "fireB", 100, 100, 100, [1, 1, 1, 1, 1, 1], _nature)
+                .FireType(100)
+                .LandEggType(-1)
+                .Build());
+        Assert.That(landValid.Land.AutoHealPoint,Is.EqualTo(100));
     }
     
     [Test]
     public void Underwater_Pokemon_StaticAttribute_IsShared()
     {
-        Underwater pokemon1=new Underwater(
-            1,"underwaterA",100,100,100,[1,1,1,1,1,1], _nature);
+        Pokemon pokemon1=new PokemonBuilder(
+            1,"underwaterA",100,100,100,[1,1,1,1,1,1], _nature)
+            .WaterType(true)
+            .UnderwaterEggType()
+            .Build();
         pokemon1.ExpPoints = (int)(Underwater.ExpBonusRate*pokemon1.ExpPoints);
         Assert.That(pokemon1.ExpPoints,Is.EqualTo(110));
     }
@@ -79,10 +100,16 @@ public class PokemonTest
     [Test]
     public void Pokemon_Extent_Test()
     {
-        Fire firePokemon = new Fire(
-            1, "fireA", 100, 100, 100, [1, 1, 1, 1, 1, 1], _nature, 100);
-        Water waterPokemon = new Water(
-            1, "waterA", 100, 100, 100, [1, 1, 1, 1, 1, 1], _nature, true);
+        Pokemon firePokemon = new PokemonBuilder(
+            1, "fireA", 100, 100, 100, [1, 1, 1, 1, 1, 1], _nature)
+            .FireType(100)
+            .LandEggType(10)
+            .Build();
+        Pokemon waterPokemon = new PokemonBuilder(
+            2, "waterA", 100, 100, 100, [1, 1, 1, 1, 1, 1], _nature)
+            .WaterType(true)
+            .UnderwaterEggType()
+            .Build();
 
         var extent = Pokemon.GetPokemons();
         Assert.That(extent.Count, Is.EqualTo(2));
@@ -93,10 +120,16 @@ public class PokemonTest
     [Test]
     public void Pokemon_Encapsulation_Test()
     {
-        Fire firePokemon = new Fire(
-            1, "fireA", 100, 100, 100, [1, 1, 1, 1, 1, 1], _nature, 100);
-        Water waterPokemon = new Water(
-            1, "waterA", 100, 100, 100, [1, 1, 1, 1, 1, 1], _nature, true);
+        Pokemon firePokemon = new PokemonBuilder(
+            1, "fireA", 100, 100, 100, [1, 1, 1, 1, 1, 1], _nature)
+            .FireType(100)
+            .LandEggType(10)
+            .Build();
+        Pokemon waterPokemon = new PokemonBuilder(
+            2, "waterA", 100, 100, 100, [1, 1, 1, 1, 1, 1], _nature)
+            .WaterType(true)
+            .UnderwaterEggType()
+            .Build();
 
         var extent = Pokemon.GetPokemons();
         Assert.That(extent.Find(p=>p.Name=="fireA").Name, Is.EqualTo("fireA"));
@@ -116,11 +149,16 @@ public class PokemonTest
         
         if (File.Exists(TestPath)) File.Delete(TestPath);
 
-        Land land = new Land(
-            1, "landA", 100, 100, 100, [1, 1, 1, 1, 1, 1], _nature, 100);
-        
-        Fire fire = new Fire(
-            1, "fireA", 100, 100, 100, [1, 1, 1, 1, 1, 1], _nature, 100);
+        Pokemon firePokemon = new PokemonBuilder(
+            1, "fireA", 100, 100, 100, [1, 1, 1, 1, 1, 1], _nature)
+            .FireType(100)
+            .LandEggType(10)
+            .Build();
+        Pokemon waterPokemon = new PokemonBuilder(
+            2, "waterA", 100, 100, 200, [1, 1, 1, 1, 1, 1], _nature)
+            .WaterType(true)
+            .UnderwaterEggType()
+            .Build();
         
         var initialExtent = Pokemon.GetPokemons();
         Assert.That(initialExtent.Count, Is.EqualTo(2));
@@ -133,14 +171,14 @@ public class PokemonTest
         
         var loadedExtent = Pokemon.GetPokemons();
         
-        var loadedLand = loadedExtent.OfType<Land>().FirstOrDefault(l => l.Name == "landA");
+        var loadedWater = loadedExtent.OfType<Pokemon>().FirstOrDefault(l => l.Name == "waterA");
         
-        Assert.IsNotNull(loadedLand, "Shop should be retrieved");
-        Assert.That(loadedLand.AutoHealPoint, Is.EqualTo(100));
+        Assert.IsNotNull(loadedWater, "Water pokemon should be retrieved");
+        Assert.That(loadedWater.Weight, Is.EqualTo(200));
         
-        var loadedFire = loadedExtent.OfType<Fire>().FirstOrDefault(f => f.Name == "fireA");
-        Assert.IsNotNull(loadedFire, "Gym should be retrieved");
-        Assert.That(loadedFire.BodyTemperature, Is.EqualTo(100));
+        var loadedFire = loadedExtent.OfType<Pokemon>().FirstOrDefault(f => f.Name == "fireA");
+        Assert.IsNotNull(loadedFire, "Fire pokemon should be retrieved");
+        Assert.That(loadedFire.Weight, Is.EqualTo(100));
     }
     
 }
