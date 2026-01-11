@@ -26,7 +26,8 @@ public class PokecenterTest
         var city = new Location("City", 1, 1, LocationType.City);
         var building = new BuildingBuilder("Pokecenter", true, city).AsPokecenter(99, "Joy", 100).Build();
         
-        var joy = new Nurse("Joy", 25, building.Pokecenter);
+        var person = new PersonBuilder("Joy", 25).AsNurse(building.Pokecenter).Build();
+        var joy = person.Nurse;
 
         Assert.That(building.Pokecenter.Nurse, Is.EqualTo(joy));
         Assert.That(joy.Pokecenter, Is.EqualTo(building.Pokecenter));
@@ -35,6 +36,6 @@ public class PokecenterTest
     [Test]
     public void Pokecenter_Nurse_Association_ThrowException_Test()
     {
-        Assert.Throws<ArgumentNullException>(() => new Nurse("joy", 26, null));
+        Assert.Throws<ArgumentNullException>(() => new PersonBuilder("joy", 26).AsNurse(null!).Build());
     }
 }

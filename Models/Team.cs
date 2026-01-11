@@ -40,7 +40,8 @@ public class Team
     public void AddLeader(string name, int age, string prefix)
     {
         if (_leader != null) throw new InvalidOperationException("This team already has leader");
-        new Leader(name, age, prefix, this);
+        var person = new PersonBuilder(name, age).AsLeader(prefix, this).Build();
+        _leader = person.Leader;
     }
     
     public static List<Team> GetTeams()
@@ -84,12 +85,16 @@ public class Team
             trainer.Team = null;
         }
         
-        //not how it should be after inheritance. TODO: change when inheritance implemented
-        Person.RemoveFromExtent(_leader);
+        if (_leader != null)
+        {
+            Person.RemoveFromExtent(_leader.Person);
+            _leader = null;
+        }
         
         _trainers.Clear();
         _extent.Remove(this);
     }
+
     
     public Team() { }
 

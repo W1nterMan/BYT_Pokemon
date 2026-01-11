@@ -4,8 +4,13 @@ using Models;
 namespace Models;
 
 [Serializable]
-public class Trainer : Person
+public class Trainer
 {
+    private Person _person;
+
+    [XmlIgnore]
+    public Person Person => _person;
+
     //Attributes
     private string[] _badges = Array.Empty<string>();
     private int _totalMoney;
@@ -54,7 +59,7 @@ public class Trainer : Person
         get => _trainerId;
         set
         {
-            if (TrainerId < 0)
+            if (value < 0)
             {
                 throw new ArgumentException("TrainerId cannot be less than zero.");
             }
@@ -74,7 +79,7 @@ public class Trainer : Person
     }
     
     // trainer - trainer
-    private HashSet<Battle> _battles;
+    private HashSet<Battle> _battles = new HashSet<Battle>();
 
     public HashSet<Battle> Battles
     {
@@ -113,16 +118,19 @@ public class Trainer : Person
         new Bag(this); 
     }
     
+    
     public Trainer() { }
 
-    public Trainer(int trainerId, int totalMoney, string[] badges, string? status, string name, int age) : base(name,age)
+    public Trainer(Person person, int trainerId, int totalMoney, string[] badges, string? status)
     {
+        _person = person ?? throw new ArgumentNullException(nameof(person));
+
         TrainerId = trainerId;
         TotalMoney = totalMoney;
         Badges = badges;
         Status = status;
+
         AddBag();
-        _battles = new HashSet<Battle>();
     }
 
     public void AddBattle(Battle battle)
@@ -137,7 +145,7 @@ public class Trainer : Person
             Bag.RemoveFromExtent(_bag);
         }
 
-        if (_team == null)
+        if (_team != null)
         {
             Team.RemoveTeamMember(this.TrainerId);
         }
@@ -152,8 +160,7 @@ public class Trainer : Person
         }*/
 
         // if (_leaders.Contains(this))
-
-        RemoveFromExtent(this);
+        
     }
 
     /*public void ChallengeTrainer(Trainer opponent)

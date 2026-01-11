@@ -69,7 +69,8 @@ namespace Models
 
             //we double assign _nurse, here, and in constructor respectively, maybe we want to do just new Nurse(_,_,this)
             //so object itself will assign itself to pokecenter?
-            _nurse = new Nurse(name, age, this);
+            var person = new PersonBuilder(name, age).AsNurse(this).Build();
+            _nurse = person.Nurse;
         }
 
         public static List<Pokecenter> GetExtent() => new List<Pokecenter>(_extent);
@@ -84,8 +85,9 @@ namespace Models
 
             if (pc._nurse != null)
             {
-                Nurse.RemoveFromExtent(pc._nurse);
+                Person.RemoveFromExtent(pc._nurse.Person);
                 pc._nurse = null;
+
             }
             
             _extent.Remove(pc);   

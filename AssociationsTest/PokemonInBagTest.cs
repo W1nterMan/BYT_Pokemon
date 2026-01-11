@@ -13,7 +13,8 @@ public class PokemonInBagTest
             .FireType(100)
             .LandEggType(10)
             .Build();
-        Trainer trainer = new Trainer(123, 1234, new string[0], "Active", "Hanna", 32);
+        
+        Trainer trainer = new PersonBuilder("Hanna", 32).AsTrainer(123, 1234, new string[0], "Active").Build().Trainer!;
         Bag bagA = trainer.Bag;
 
         
@@ -35,7 +36,7 @@ public class PokemonInBagTest
             .FireType(100)
             .LandEggType(10)
             .Build();
-        Trainer trainer = new Trainer(1, 1000, new string[0], "Active", "Ash", 16);
+        Trainer trainer = new PersonBuilder("Ash", 16).AsTrainer(1, 1000, new string[0], "Active").Build().Trainer!;
         Bag bagA = trainer.Bag;
 
         
@@ -56,7 +57,7 @@ public class PokemonInBagTest
             .FireType(100)
             .LandEggType(10)
             .Build();
-        Trainer trainer = new Trainer(123, 1234, new string[0], "Active", "Hanna", 32);
+        Trainer trainer = new PersonBuilder("Hanna", 32).AsTrainer(123, 1234, new string[0], "Active").Build().Trainer!;
         Bag bagA = trainer.Bag;
 
         

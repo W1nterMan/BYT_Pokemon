@@ -14,7 +14,7 @@ namespace Test
 
         private Trainer CreateTrainer(int id, string name)
         {
-            return new Trainer(id, 100,[], "Active", name, 20);
+            return new PersonBuilder(name, 20).AsTrainer(id, 100, [], "Active").Build().Trainer!;
         }
 
         [Test]

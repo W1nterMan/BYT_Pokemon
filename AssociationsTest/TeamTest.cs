@@ -9,7 +9,7 @@ public class TeamTest
     {
         Team team = new Team();
 
-        Trainer trainer = new Trainer(123, 1234, new string[0], "Active", "Hanna", 32);
+        Trainer trainer = new PersonBuilder("Hanna", 32).AsTrainer(123, 1234, new string[0], "Active").Build().Trainer!;
 
         team.AddTeamMember(trainer);
 
@@ -22,8 +22,7 @@ public class TeamTest
     public void RemoveTrainerTest()
     {
         Team team = new Team();
-
-        Trainer trainer = new Trainer(1234, 10344, new string[0], "Active", "Maria", 3);
+        Trainer trainer = new PersonBuilder("Maria", 3).AsTrainer(1234, 10344, new string[0], "Active").Build().Trainer!;
 
         team.AddTeamMember(trainer);
         team.RemoveTeamMember(1234);
@@ -37,8 +36,7 @@ public class TeamTest
     {
         Team teamRed = new Team();
         Team teamBlue = new Team();
-
-        Trainer trainer = new Trainer(12, 1000, new string[0], "Active", "Bubba", 41);
+        Trainer trainer = new PersonBuilder("Bubba", 41).AsTrainer(12, 1000, new string[0], "Active").Build().Trainer!;
 
         teamRed.AddTeamMember(trainer);
 
@@ -52,7 +50,7 @@ public class TeamTest
     {
         Team teamRed = new Team();
 
-        Trainer trainer = new Trainer(12, 1000, new string[0], "Active", "Bubba", 41);
+        Trainer trainer = new PersonBuilder("Bubba", 41).AsTrainer(12, 1000, new string[0], "Active").Build().Trainer!;
 
         teamRed.AddTeamMember(trainer);
 
