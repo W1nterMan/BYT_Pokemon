@@ -3,10 +3,14 @@
 namespace Models
 {
     [Serializable]
-    public class Pokecenter : Building
+    public class Pokecenter
     {
-        //Attributes
+        private static List<Pokecenter> _extent = new List<Pokecenter>();
+        [XmlIgnore]
+        private Building _building;
         private static double _baseHealingCost = 0;
+
+        public Building Building => _building;
 
         public static double BaseHealingCost
         {
@@ -41,6 +45,17 @@ namespace Models
             
         }
 
+        public Pokecenter() { }
+
+        public Pokecenter(Building building, int pcNumber, string nurseName, int age)
+        {
+            _building = building;
+            AddPc(pcNumber);
+            //we either add composition for 1-1 or make connection 0..1-1
+            AddNurse(nurseName, age);
+            _extent.Add(this);
+        }
+
         public void AddPc(int computerNumber)
         {
             if (_pc != null) throw new InvalidOperationException("This Pokecenter already has a PC");
@@ -57,30 +72,7 @@ namespace Models
             _nurse = new Nurse(name, age, this);
         }
 
-        public void DeletePokecenter()
-        {
-            if (_pc != null)
-            {
-                PC.RemoveFromExtent(_pc);
-                _pc = null;
-            }
-
-            if (_nurse == null)
-            {
-                Person.RemoveFromExtent(_nurse);
-                _nurse = null;
-            }
-
-            RemoveFromExtent(this);
-        }
-
-        public Pokecenter() { }
-
-        public Pokecenter(string name, bool isAccessible, Location location, int pcNumber, string nurseName, int age) : base(name, isAccessible, location)
-        {
-            AddPc(pcNumber);
-            //we either add composition for 1-1 or make connection 0..1-1
-            AddNurse(nurseName,age);
-        }
+        public static List<Pokecenter> GetExtent() => new List<Pokecenter>(_extent);
+        public static void RemoveFromExtent(Pokecenter pk) => _extent.Remove(pk);
     }
 }

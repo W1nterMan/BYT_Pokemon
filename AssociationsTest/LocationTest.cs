@@ -42,21 +42,21 @@ public class LocationTest
     {
         var town = new Location("Town", 10, 10, LocationType.Town);
         
-        var shop = new Shop("Shop", true, 1.0, town);
-        
-        Assert.IsTrue(town.GetBuildings().Contains(shop));
-        Assert.AreEqual(town, shop.Location);
-        
+        var building = new BuildingBuilder("Shop", true, town).AsShop(1.0).Build();
+    
+        Assert.IsTrue(town.GetBuildings().Contains(building));
+        Assert.AreEqual(town, building.Location);
+    
         town.DeleteLocation();
-        
+    
         var buildingExtent = Building.GetExtent();
-        Assert.IsFalse(buildingExtent.Contains(shop), "Shop should be deleted when Location is deleted");
+        Assert.IsFalse(buildingExtent.Contains(building), "Building should be deleted when Location is deleted");
     }
     
     [Test]
     public void Building_Cannot_Exist_Without_Location()
     {
-        Assert.Throws<ArgumentNullException>(() => new Shop("Shop", true, 1.0, null));
+        Assert.Throws<ArgumentNullException>(() => new BuildingBuilder("Shop", true, null).AsShop(1.0).Build());
     }
     
     
