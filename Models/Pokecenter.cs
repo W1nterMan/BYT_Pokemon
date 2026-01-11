@@ -51,7 +51,7 @@ namespace Models
         {
             _building = building;
             AddPc(pcNumber);
-            //we either add composition for 1-1 or make connection 0..1-1
+            //composition chosen.
             AddNurse(nurseName, age);
             _extent.Add(this);
         }
@@ -73,6 +73,22 @@ namespace Models
         }
 
         public static List<Pokecenter> GetExtent() => new List<Pokecenter>(_extent);
-        public static void RemoveFromExtent(Pokecenter pk) => _extent.Remove(pk);
+
+        public static void RemoveFromExtent(Pokecenter pc)
+        {
+            if (pc._pc != null)
+            {
+                PC.RemoveFromExtent(pc._pc);
+                pc._pc = null;
+            }
+
+            if (pc._nurse != null)
+            {
+                Nurse.RemoveFromExtent(pc._nurse);
+                pc._nurse = null;
+            }
+            
+            _extent.Remove(pc);   
+        }
     }
 }
