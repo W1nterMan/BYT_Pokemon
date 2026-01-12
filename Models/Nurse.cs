@@ -6,6 +6,8 @@ namespace Models;
 [Serializable]
 public class Nurse
 {
+    private static List<Nurse> _extent = new List<Nurse>();
+
     private Person _person;
 
     [XmlIgnore]
@@ -35,5 +37,12 @@ public class Nurse
         _person = person ?? throw new ArgumentNullException(nameof(person));
         Pokecenter = pokecenter;
         pokecenter.Nurse = this;
+
+        _extent.Add(this);
+    }
+
+    public static void RemoveFromExtent(Nurse nurse)
+    {
+        _extent.Remove(nurse);
     }
 }

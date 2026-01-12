@@ -43,6 +43,12 @@ public class Team
         var person = new PersonBuilder(name, age).AsLeader(prefix, this).Build();
         _leader = person.Leader;
     }
+
+    public void ChangeLeader(Person newLeader)
+    {
+        newLeader.AddLeaderConnection(Leader.SpecialPrefix, this);
+        _leader = newLeader.Leader;
+    }
     
     public static List<Team> GetTeams()
     {

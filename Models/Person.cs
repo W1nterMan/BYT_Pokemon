@@ -65,6 +65,40 @@ public class Person
         AddPerson(this);
         return this;
     }
+
+    public void AddTrainerConnection(
+        int trainerId,
+        int money,
+        string[] badges,
+        string? status)
+    {
+        _trainer = new Trainer(this,trainerId, money, badges, status);
+    }
+
+    public void AddLeaderConnection(string prefix, Team team)
+    {
+        _leader = new Leader(this, prefix, team);
+    }
+
+    public void removeTrainerConnection()
+    {
+        if (_trainer != null)
+        {
+            _trainer.DeleteTrainer();
+        }
+        _trainer = null;
+    }
+
+    public void removeLeaderConnection(Person changedLeader)
+    {
+        _leader.Team.ChangeLeader(changedLeader);
+
+        if (_leader != null)
+        {
+            _leader.DeleteLeader(changedLeader.Leader);
+        }
+        _leader = null;
+    }
     
     private static void AddPerson(Person person)
     {

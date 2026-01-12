@@ -1,11 +1,13 @@
-using System.Xml.Serialization;
 using Models;
+using System;
+using System.Xml.Serialization;
 
 namespace Models;
 
 [Serializable]
 public class Trainer
 {
+    private static List<Trainer> _extent = new List<Trainer>();
     private Person _person;
 
     [XmlIgnore]
@@ -131,6 +133,8 @@ public class Trainer
         Status = status;
 
         AddBag();
+
+        _extent.Add(this);
     }
 
     public void AddBattle(Battle battle)
@@ -150,7 +154,9 @@ public class Trainer
             Team.RemoveTeamMember(this.TrainerId);
         }
 
-        //IDK how to implement, need to ask teacher.
+        _extent.Remove(this);
+
+        //IDK how to implement, need to ask teacher. really need to ask!
         /*foreach (var battle in _battles)
         {
             if (battle.Trainer1 == this)
@@ -160,8 +166,10 @@ public class Trainer
         }*/
 
         // if (_leaders.Contains(this))
-        
+
     }
+
+    //TODO: save/load
 
     /*public void ChallengeTrainer(Trainer opponent)
     {

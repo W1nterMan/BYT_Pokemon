@@ -75,22 +75,24 @@ namespace Models
 
         public static List<Pokecenter> GetExtent() => new List<Pokecenter>(_extent);
 
-        public static void RemoveFromExtent(Pokecenter pc)
+        public static void RemoveFromExtent(Pokecenter pokecenter)
         {
-            if (pc._pc != null)
+            if (pokecenter._pc != null)
             {
-                PC.RemoveFromExtent(pc._pc);
-                pc._pc = null;
+                PC.RemoveFromExtent(pokecenter._pc);
+                pokecenter._pc = null;
             }
 
-            if (pc._nurse != null)
+            if (pokecenter._nurse != null)
             {
-                Person.RemoveFromExtent(pc._nurse.Person);
-                pc._nurse = null;
+                Nurse.RemoveFromExtent(pokecenter._nurse);
+                //TODO: nurse left "orphaned" w/o pokecenter? or we delete the person behind it? we`ll need to decide.
+                Person.RemoveFromExtent(pokecenter._nurse.Person);
+                pokecenter._nurse = null;
 
             }
             
-            _extent.Remove(pc);   
+            _extent.Remove(pokecenter);   
         }
     }
 }

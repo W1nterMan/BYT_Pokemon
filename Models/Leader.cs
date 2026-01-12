@@ -5,6 +5,7 @@ namespace Models;
 [Serializable]
 public class Leader
 {
+    private static List<Leader> _extent = new List<Leader>();
     private Person _person;
 
     [XmlIgnore]
@@ -40,5 +41,16 @@ public class Leader
         SpecialPrefix = specialPrefix;
         Team = team;
         team.Leader = this;
+
+        _extent.Add(this);
+    }
+    public void DeleteLeader(Leader changedLeader)
+    {
+        if (_team != null)
+        {
+            Team.Leader = changedLeader;
+        }
+
+        _extent.Remove(this);
     }
 }
