@@ -3,10 +3,14 @@
 namespace Models
 {
     [Serializable]
-    public class Pokecenter : Building
+    public class Pokecenter
     {
-        //Attributes
+        private static List<Pokecenter> _extent = new List<Pokecenter>();
+        [XmlIgnore]
+        private Building _building;
         private static double _baseHealingCost = 0;
+
+        public Building Building => _building;
 
         public static double BaseHealingCost
         {
@@ -41,6 +45,17 @@ namespace Models
             
         }
 
+        public Pokecenter() { }
+
+        public Pokecenter(Building building, int pcNumber, string nurseName, int age)
+        {
+            _building = building;
+            AddPc(pcNumber);
+            //composition chosen.
+            AddNurse(nurseName, age);
+            _extent.Add(this);
+        }
+
         public void AddPc(int computerNumber)
         {
             if (_pc != null) throw new InvalidOperationException("This Pokecenter already has a PC");
@@ -54,33 +69,30 @@ namespace Models
 
             //we double assign _nurse, here, and in constructor respectively, maybe we want to do just new Nurse(_,_,this)
             //so object itself will assign itself to pokecenter?
-            _nurse = new Nurse(name, age, this);
+            var person = new PersonBuilder(name, age).AsNurse(this).Build();
+            _nurse = person.Nurse;
         }
 
-        public void DeletePokecenter()
+        public static List<Pokecenter> GetExtent() => new List<Pokecenter>(_extent);
+
+        public static void RemoveFromExtent(Pokecenter pokecenter)
         {
-            if (_pc != null)
+            if (pokecenter._pc != null)
             {
-                PC.RemoveFromExtent(_pc);
-                _pc = null;
+                PC.RemoveFromExtent(pokecenter._pc);
+                pokecenter._pc = null;
             }
 
-            if (_nurse == null)
+            if (pokecenter._nurse != null)
             {
-                Person.RemoveFromExtent(_nurse);
-                _nurse = null;
+                Nurse.RemoveFromExtent(pokecenter._nurse);
+                //TODO: nurse left "orphaned" w/o pokecenter? or we delete the person behind it? we`ll need to decide.
+                Person.RemoveFromExtent(pokecenter._nurse.Person);
+                pokecenter._nurse = null;
+
             }
-
-            RemoveFromExtent(this);
-        }
-
-        public Pokecenter() { }
-
-        public Pokecenter(string name, bool isAccessible, Location location, int pcNumber, string nurseName, int age) : base(name, isAccessible, location)
-        {
-            AddPc(pcNumber);
-            //we either add composition for 1-1 or make connection 0..1-1
-            AddNurse(nurseName,age);
+            
+            _extent.Remove(pokecenter);   
         }
     }
 }

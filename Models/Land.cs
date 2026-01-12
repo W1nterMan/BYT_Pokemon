@@ -1,28 +1,30 @@
 ﻿namespace Models;
 
 [Serializable]
-public class Land : Pokemon
+public class Land 
 {
+    private static List<Land> _extent=new List<Land>();
+    private Pokemon _pokemon;
     private int _autoHealPoint;
+    
+    public Pokemon Pokemon => _pokemon;
 
-    public int AutoHealPoint
-    {
-        get => _autoHealPoint;
-        set
-        {
-            if (value < 0)
-            {
-                throw new ArgumentException("Auto heal point cannot be negative");
-            }
-            _autoHealPoint = value;
-        }
-    }
-
+    public int AutoHealPoint => _autoHealPoint;
+    
     public Land(){}
     
-    public Land(int id, string name, int healthPoints, int expPoints, double weight, int[] baseStats,Nature nature, int autoHealPoint) :
-        base(id, name, healthPoints, expPoints, weight, baseStats,nature)
+    public Land(Pokemon pokemon, int autoHealPoint)
     {
-        AutoHealPoint  =  autoHealPoint;
+        _pokemon = pokemon;
+        if (autoHealPoint < 0)
+        {
+            throw new ArgumentException("Auto heal point cannot be negative");
+        }
+        _autoHealPoint  =  autoHealPoint;
+        _extent.Add(this);
     }
+
+    public List<Land> GetExtent() => new List<Land>(_extent);
+    
+    public static void  RemoveFromExtent(Land land) => _extent.Remove(land);
 }

@@ -7,8 +7,7 @@ public class TrainerBagTest
     [Test]
     public void TrainerBagComposition()
     {
-        Trainer bubba = new Trainer(1, 1000, [], "Active", "Bubba", 55);
-
+        Trainer bubba = new PersonBuilder("Bubba", 55).AsTrainer(1, 1000, [], "Active").Build().Trainer!;
         Assert.IsNotNull(bubba.Bag);
         Assert.That(bubba.Bag.Owner, Is.EqualTo(bubba));
     }

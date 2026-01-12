@@ -1,28 +1,31 @@
 ﻿namespace Models;
 
 [Serializable]
-public class Fire : Pokemon
+public class Fire
 {
-    private double _bodyTemperature;
+    private static List<Fire> _extent = new List<Fire>();
+    private Pokemon _pokemon;
+    public Pokemon Pokemon => _pokemon;
+    private double  _bodyTemperature;
 
-    public double BodyTemperature
-    {
-        get => _bodyTemperature;
-        set
-        {
-            if (value <= 0)
-            {
-                throw new ArgumentException("BodyTemperature must be greater than zero");
-            }
-            _bodyTemperature = value;
-        }
-    }
+    public double BodyTemperature => _bodyTemperature;
     
     public Fire(){}
 
-    public Fire(int id, string name, int healthPoints, int expPoints, double weight, int[] baseStats,Nature nature, double bodyTemperature) :
-        base(id, name, healthPoints, expPoints, weight, baseStats,nature)
+    public Fire(Pokemon pokemon,double bodyTemperature)
     {
-       BodyTemperature  =  bodyTemperature;
+        _pokemon = pokemon;
+        
+        if (bodyTemperature <= 0)
+        {
+            throw new ArgumentException("BodyTemperature must be greater than zero");
+        }
+        
+        _bodyTemperature  =  bodyTemperature;
+        
+        _extent.Add(this);
     }
+
+    public List<Fire> GetExtent() => new List<Fire>(_extent);
+    public static void RemoveFromExtent(Fire fire)=>_extent.Remove(fire);
 }

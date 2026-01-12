@@ -7,7 +7,7 @@ namespace Models
     [XmlInclude(typeof(Shop))]
     [XmlInclude(typeof(Gym))]
     [XmlInclude(typeof(Pokecenter))]
-    public abstract class Building
+    public class Building
     {
         private static List<Building> _extent = new List<Building>();
 
@@ -16,6 +16,14 @@ namespace Models
         
         private Location _location; 
         
+        private Shop? _shop;
+        private Gym? _gym;
+        private Pokecenter? _pokecenter;
+
+        public Shop? Shop { get => _shop; set => _shop = value; }
+        public Gym? Gym { get => _gym; set => _gym = value; }
+        public Pokecenter? Pokecenter { get => _pokecenter; set => _pokecenter = value; }
+
         [XmlIgnore]
         public Location Location 
         { 
@@ -32,19 +40,6 @@ namespace Models
         
         public Building() { }
 
-        public Building(string name, bool isAccessible, Location location)
-        {
-            Name = name;
-            IsAccessible = isAccessible;
-            
-            if (location == null) throw new ArgumentNullException(nameof(location), "Building must be placed in a Location.");
-            
-            _location = location;
-            _location.AddBuilding(this);
-
-            AddBuilding(this);
-        }
-        
         public string Name
         {
             get => _name;
@@ -63,24 +58,47 @@ namespace Models
             get => _isAccessible;
             set => _isAccessible = value;
         }
-        
-        private static void AddBuilding(Building building)
+
+        public Building Set(BuildingBuilder builder)
         {
-            if (building == null) 
-            {
-                throw new ArgumentException("Building cannot be null"); 
-            }
-            _extent.Add(building);
+            Name = builder.Name;
+            IsAccessible = builder.IsAccessible;
+            
+            if (builder.Location == null) throw new ArgumentNullException(nameof(builder.Location));
+            _location = builder.Location;
+            _location.AddBuilding(this);
+
+            //{Disjoint, Complete}
+            int typeCount = 0;
+            if (builder.Shop != null) typeCount++;
+            if (builder.Gym != null) typeCount++;
+            if (builder.Pokecenter != null) typeCount++;
+
+            if (typeCount != 1) throw new ArgumentException("Building must have exactly one specific type aspect.");
+
+            _shop = builder.Shop;
+            _gym = builder.Gym;
+            _pokecenter = builder.Pokecenter;
+
+            AddBuilding(this);
+            return this;
         }
 
-        public static List<Building> GetExtent()
-        {
-            return new List<Building>(_extent);
-        }
+        private static void AddBuilding(Building building) => _extent.Add(building);
+        public static List<Building> GetExtent() => new List<Building>(_extent);
         
         public static void Save(string path = "buildings.xml")
         {
             Serializer.Save(path, _extent);
+        }
+        
+        public void DeleteBuilding()
+        {
+            if (Shop != null) Shop.RemoveFromExtent(Shop);
+            if (Gym != null) Gym.RemoveFromExtent(Gym);
+            if (Pokecenter != null) Pokecenter.RemoveFromExtent(Pokecenter);
+            
+            _extent.Remove(this);
         }
         
         public static bool Load(string path = "buildings.xml")
@@ -94,13 +112,47 @@ namespace Models
             }
             return false;
         }
-        
-        public static void RemoveFromExtent(Building building)
+
+        public static void RemoveFromExtent(Building b) => _extent.Remove(b);
+    }
+
+    public class BuildingBuilder
+    {
+        private Building _building;
+        public string Name { get; }
+        public bool IsAccessible { get; }
+        public Location Location { get; }
+
+        public Shop? Shop { get; private set; }
+        public Gym? Gym { get; private set; }
+        public Pokecenter? Pokecenter { get; private set; }
+
+        public BuildingBuilder(string name, bool isAccessible, Location location)
         {
-            if(_extent.Contains(building))
-            {
-                _extent.Remove(building);
-            }
+            Name = name;
+            IsAccessible = isAccessible;
+            Location = location;
+            _building = new Building();
         }
+
+        public BuildingBuilder AsShop(double multiplier)
+        {
+            Shop = new Shop(_building, multiplier);
+            return this;
+        }
+
+        public BuildingBuilder AsGym(string leader, string badgeName)
+        {
+            Gym = new Gym(_building, leader, badgeName);
+            return this;
+        }
+
+        public BuildingBuilder AsPokecenter(int pcNumber, string nurseName, int age)
+        {
+            Pokecenter = new Pokecenter(_building, pcNumber, nurseName, age);
+            return this;
+        }
+
+        public Building Build() => _building.Set(this);
     }
 }

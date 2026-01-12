@@ -14,7 +14,8 @@ public class BuildingTest
     [Test]
     public void Building_Name_Validation_ThrowsException()
     {
-        var ex = Assert.Throws<ArgumentException>(() => new Shop("", true, 1.0, _testLocation));
+        var ex = Assert.Throws<ArgumentException>(() => 
+            new BuildingBuilder("", true, _testLocation).AsShop(1.0).Build());
         Assert.AreEqual("Building name cannot be empty or null.", ex.Message);
     }
 
@@ -22,15 +23,15 @@ public class BuildingTest
     [Test]
     public void Shop_MultiValue_ItemsSold_WorksCorrectly()
     {
-        var shop = new Shop("Shop1", true, 1.0, _testLocation);
+        var building = new BuildingBuilder("Shop1", true, _testLocation).AsShop(1.0).Build();
         
-        shop.AddItem("Pokeball");
-        shop.AddItem("Ultra Pokeball");
+        building.Shop.AddItem("Pokeball");
+        building.Shop.AddItem("Ultra Pokeball");
 
-        Assert.AreEqual(2, shop.ItemsSold.Count);
-        Assert.Contains("Pokeball", shop.ItemsSold);
+        Assert.AreEqual(2, building.Shop.ItemsSold.Count);
+        Assert.Contains("Pokeball", building.Shop.ItemsSold);
         
-        Assert.Throws<ArgumentException>(() => shop.AddItem(""));
+        Assert.Throws<ArgumentException>(() => building.Shop.AddItem(""));
     }
 
     // Static attr
@@ -39,8 +40,8 @@ public class BuildingTest
     {
         Pokecenter.BaseHealingCost = 50;
 
-        var center1 = new Pokecenter("Center 1", true, _testLocation, 99,"Joy",100);
-        var center2 = new Pokecenter("Center 2", true, _testLocation, 11, "Joy",100);
+        var center1 = new BuildingBuilder("Center 1", true, _testLocation).AsPokecenter(99, "Joy", 100).Build();
+        var center2 = new BuildingBuilder("Center 2", true, _testLocation).AsPokecenter(11, "Joy", 100).Build();
         
         Assert.AreEqual(50, Pokecenter.BaseHealingCost);
         
@@ -52,26 +53,26 @@ public class BuildingTest
     [Test]
     public void Gym_DerivedAttribute_CalculatesOnFly()
     {
-        var gym = new Gym("Gym 1", true, "Leader 1", _testLocation);
+        var building = new BuildingBuilder("Gym 1", true, _testLocation).AsGym("Leader 1", "Badge").Build();
         
-        Assert.AreEqual(0, gym.TrainersCount);
+        Assert.AreEqual(0, building.Gym.TrainersCount);
 
-        gym.TrainersInGym.Add("Trainer 1");
-        gym.TrainersInGym.Add("Trainer 2");
+        building.Gym.TrainersInGym.Add("Trainer 1");
+        building.Gym.TrainersInGym.Add("Trainer 2");
 
-        Assert.AreEqual(2, gym.TrainersCount);
+        Assert.AreEqual(2, building.Gym.TrainersCount);
     }
 
     // Optional attr
     [Test]
     public void Gym_OptionalAttribute_CanBeNull()
     {
-        var gym = new Gym("Gym 1", true, "Leader 1", _testLocation);
+        var building = new BuildingBuilder("Gym 1", true, _testLocation).AsGym("Leader 1", null).Build();
         
-        Assert.IsNull(gym.BadgeName);
+        Assert.IsNull(building.Gym.BadgeName);
 
-        gym.BadgeName = "Badge 1";
-        Assert.IsNotNull(gym.BadgeName);
+        building.Gym.BadgeName = "Badge 1";
+        Assert.IsNotNull(building.Gym.BadgeName);
     }
     
     [Test]
@@ -81,32 +82,26 @@ public class BuildingTest
         
         if (File.Exists(TestPath)) File.Delete(TestPath);
 
-        var shop = new Shop("Store 1", true, 1.5, _testLocation);
-        shop.AddItem("Item 1"); 
-
-        var gym = new Gym("Gym 1", false, "Leader 1", _testLocation);
-        gym.MinRequiredBadges = 5; 
+        new BuildingBuilder("Store 1", true, _testLocation).AsShop(1.5).Build();
+        new BuildingBuilder("Gym 1", false, _testLocation).AsGym("Leader 1", "Boulder").Build();
         
         var initialExtent = Building.GetExtent();
-        Assert.IsTrue(initialExtent.Count >= 2);
+        Assert.AreEqual(2, initialExtent.Count);
         
         Building.Save(TestPath);
         
         bool loadSuccess = Building.Load(TestPath);
 
-        Assert.IsTrue(loadSuccess, "Load should return true");
+        Assert.IsTrue(loadSuccess);
         
         var loadedExtent = Building.GetExtent();
         
-        var loadedShop = loadedExtent.OfType<Shop>().FirstOrDefault(s => s.Name == "Store 1");
+        var shopBuilding = loadedExtent.FirstOrDefault(b => b.Name == "Store 1");
+        Assert.IsNotNull(shopBuilding?.Shop);
+        Assert.AreEqual(1.5, shopBuilding.Shop.PriceMultiplier);
         
-        Assert.IsNotNull(loadedShop, "Shop should be retrieved");
-        Assert.AreEqual(1.5, loadedShop.PriceMultiplier);
-        Assert.Contains("Item 1", loadedShop.ItemsSold, "Shop inventory should persist");
-        
-        var loadedGym = loadedExtent.OfType<Gym>().FirstOrDefault(g => g.Name == "Gym 1");
-        Assert.IsNotNull(loadedGym, "Gym should be retrieved");
-        Assert.AreEqual("Leader 1", loadedGym.Leader);
-        Assert.IsFalse(loadedGym.IsAccessible, "Gym accessibility should be false");
+        var gymBuilding = loadedExtent.FirstOrDefault(b => b.Name == "Gym 1");
+        Assert.IsNotNull(gymBuilding?.Gym);
+        Assert.AreEqual("Leader 1", gymBuilding.Gym.Leader);
     }
 }

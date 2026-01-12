@@ -40,7 +40,8 @@ public class Team
     public void AddLeader(string name, int age, string prefix)
     {
         if (_leader != null) throw new InvalidOperationException("This team already has leader");
-        new Leader(name, age, prefix, this);
+        var person = new PersonBuilder(name, age).AsLeader(prefix, this).Build();
+        _leader = person.Leader;
     }
     
     public static List<Team> GetTeams()
@@ -84,12 +85,19 @@ public class Team
             trainer.Team = null;
         }
         
-        //not how it should be after inheritance. TODO: change when inheritance implemented
-        Person.RemoveFromExtent(_leader);
+        if (_leader != null)
+        {
+            //I dont know whether we want to delete person behind leader too, so for now, only leader is deleted
+            _leader.Team = null; //WHY NULL ALLOWED, whatever
+            _leader.Person.RemoveLeaderConnection();
+            Leader.RemoveFromExtent(_leader);
+            _leader = null;
+        }
         
         _trainers.Clear();
         _extent.Remove(this);
     }
+
     
     public Team() { }
 
@@ -99,6 +107,14 @@ public class Team
         _extent.Add(this);
         AddLeader(trainerName, age, prefix);
         
+    }
+    
+    public Team(string name, Person person, string prefix)
+    {
+        Name = name;
+        person.AddLeaderConnection(prefix,this);
+        _leader = person.Leader;
+        _extent.Add(this);
     }
 
     public static void Save(string path = "teams.xml")

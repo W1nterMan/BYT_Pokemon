@@ -4,8 +4,15 @@ using Models;
 namespace Models;
 
 [Serializable]
-public class Nurse : Person
+public class Nurse
 {
+    private static List<Nurse> _extent = new List<Nurse>();
+
+    private Person _person;
+
+    [XmlIgnore]
+    public Person Person => _person;
+
     public static string NurseNickname { get; } = "Nurse Joy";
     
     private Pokecenter _pokecenter;
@@ -25,9 +32,17 @@ public class Nurse : Person
     {
     }
 
-    public Nurse(string name, int age, Pokecenter pokecenter) : base(name, age)
+    public Nurse(Person person, Pokecenter pokecenter)
     {
+        _person = person ?? throw new ArgumentNullException(nameof(person));
         Pokecenter = pokecenter;
         pokecenter.Nurse = this;
+
+        _extent.Add(this);
+    }
+
+    public static void RemoveFromExtent(Nurse nurse)
+    {
+        _extent.Remove(nurse);
     }
 }

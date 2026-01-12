@@ -8,31 +8,34 @@ public class PokecenterTest
     public void Pokecenter_PC_Composition_Test()
     {
         var city = new Location("City", 1, 1, LocationType.City);
-        var center = new Pokecenter("Pokecenter", true, city, 99, "Joy",100);
+        var building = new BuildingBuilder("Pokecenter", true, city).AsPokecenter(99, "Joy", 100).Build();
 
-        Assert.IsNotNull(center.Pc);
-        Assert.AreEqual(99, center.Pc.ComputerNumber);
-        Assert.AreEqual(center, center.Pc.Pokecenter);
+        Assert.IsNotNull(building.Pokecenter.Pc);
+        Assert.AreEqual(99, building.Pokecenter.Pc.ComputerNumber);
+        Assert.AreEqual(building.Pokecenter, building.Pokecenter.Pc.Pokecenter);
 
-        center.DeletePokecenter();
+        building.DeleteBuilding();
 
-        Assert.IsNull(center.Pc);
+        var extent = Building.GetExtent();
+        Assert.IsFalse(extent.Contains(building));
     }
 
     [Test]
     public void Pokecenter_Nurse_Association_Test()
     {
         var city = new Location("City", 1, 1, LocationType.City);
-        var center = new Pokecenter("Pokecenter", true, city, 99, "Joy",100);
-        var joy = new Nurse("Joy", 25, center);
+        var building = new BuildingBuilder("Pokecenter", true, city).AsPokecenter(99, "Joy", 100).Build();
+        
+        var person = new PersonBuilder("Joy", 25).AsNurse(building.Pokecenter).Build();
+        var joy = person.Nurse;
 
-        Assert.That(center.Nurse, Is.EqualTo(joy));
-        Assert.That(joy.Pokecenter, Is.EqualTo(center));
+        Assert.That(building.Pokecenter.Nurse, Is.EqualTo(joy));
+        Assert.That(joy.Pokecenter, Is.EqualTo(building.Pokecenter));
     }
 
     [Test]
     public void Pokecenter_Nurse_Association_ThrowException_Test()
     {
-        Assert.Throws<ArgumentNullException>(() => new Nurse("joy", 26, null));
+        Assert.Throws<ArgumentNullException>(() => new PersonBuilder("joy", 26).AsNurse(null!).Build());
     }
 }

@@ -3,12 +3,20 @@
 [Serializable]
 public class Water : Pokemon
 {
-    public bool CanSwim { get; set; }
+    private static List<Water> _extent = new List<Water>();
+    private Pokemon _pokemon;
+    public Pokemon Pokemon => _pokemon;
+    private bool _canSwim;
+    public bool CanSwim  => _canSwim;
 
     public Water(){}
-    public Water(int id, string name, int healthPoints, int expPoints, double weight, int[] baseStats,Nature nature, bool canSwim) :
-        base(id, name, healthPoints, expPoints, weight, baseStats, nature)
+    public Water(Pokemon pokemon, bool canSwim) 
     {
-        CanSwim = canSwim;
+        _pokemon = pokemon;
+        _canSwim = canSwim;
+        _extent.Add(this);
     }
+    
+    public List<Water> GetExtent() => new List<Water>(_extent);
+    public static void RemoveFromExtent(Water water) =>  _extent.Remove(water);
 }

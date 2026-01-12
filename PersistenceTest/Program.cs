@@ -1,8 +1,15 @@
 ﻿using Models;
 
 Nature brave = new Nature("Brave", 1, 2);
-Fire charmander = new Fire(1, "Charmander", 20, 1, 40, new int[]{1,1,1,1,1,1}, brave,36);
-Fire vulpix = new Fire(2, "Vulpix", 18, 1, 35, new int[]{1,2,1,1,1,1}, brave,37);
+Pokemon charmander = new PokemonBuilder(1, "Charmander", 20, 1, 40, new int[]{1,1,1,1,1,1}, brave)
+                                        .FireType(36)
+                                        .LandEggType(10)
+                                        .Build();
+Pokemon vulpix = new PokemonBuilder(1, "Vulpix", 20, 1, 40, new int[]{1,1,1,1,1,1}, brave)
+                                .FireType(37)
+                                .LandEggType(10)
+                                .Build();
+
 
 Pokemon.Save("pokemons.xml");
 

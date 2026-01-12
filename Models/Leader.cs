@@ -3,8 +3,14 @@ using System.Xml.Serialization;
 namespace Models;
 
 [Serializable]
-public class Leader : Person
+public class Leader
 {
+    private static List<Leader> _extent = new List<Leader>();
+    private Person _person;
+
+    [XmlIgnore]
+    public Person Person => _person;
+
     private string _specialPrefix;
 
     public string SpecialPrefix
@@ -29,10 +35,15 @@ public class Leader : Person
 
     public Leader() { }
 
-    public Leader(string name, int age, string specialPrefix, Team team) : base(name, age)
+    public Leader(Person person, string specialPrefix, Team team)
     {
+        _person = person ?? throw new ArgumentNullException(nameof(person));
         SpecialPrefix = specialPrefix;
         Team = team;
         team.Leader = this;
+
+        _extent.Add(this);
     }
+    
+    public static void RemoveFromExtent(Leader leader)=>_extent.Remove(leader);
 }
