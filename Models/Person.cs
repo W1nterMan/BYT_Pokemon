@@ -80,7 +80,7 @@ public class Person
         _leader = new Leader(this, prefix, team);
     }
 
-    public void removeTrainerConnection()
+    public void RemoveTrainerConnection()
     {
         if (_trainer != null)
         {
@@ -89,15 +89,12 @@ public class Person
         _trainer = null;
     }
 
-    public void removeLeaderConnection(Person changedLeader)
+    public void RemoveLeaderConnection()
     {
-        _leader.Team.ChangeLeader(changedLeader);
-
         if (_leader != null)
         {
-            _leader.DeleteLeader(changedLeader.Leader);
+            _leader = null;
         }
-        _leader = null;
     }
     
     private static void AddPerson(Person person)
@@ -128,8 +125,21 @@ public class Person
         }
         return false;
     }
-    
-    public static void RemoveFromExtent(Person person) => _extent.Remove(person);
+
+    public static void RemoveFromExtent(Person person)
+    {
+        if (person._leader != null)
+        {
+            Leader.RemoveFromExtent(person._leader);
+        }
+        
+        if (person._trainer != null)
+        {
+            //TODO: maybe we should do removeFromExtent rename here... also do it static
+            person._trainer.DeleteTrainer();
+        } 
+        _extent.Remove(person);
+    }
     
     public virtual void Contact() { }
 }

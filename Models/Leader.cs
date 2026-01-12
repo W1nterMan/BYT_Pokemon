@@ -44,13 +44,6 @@ public class Leader
 
         _extent.Add(this);
     }
-    public void DeleteLeader(Leader changedLeader)
-    {
-        if (_team != null)
-        {
-            Team.Leader = changedLeader;
-        }
-
-        _extent.Remove(this);
-    }
+    
+    public static void RemoveFromExtent(Leader leader)=>_extent.Remove(leader);
 }

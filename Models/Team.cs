@@ -43,12 +43,6 @@ public class Team
         var person = new PersonBuilder(name, age).AsLeader(prefix, this).Build();
         _leader = person.Leader;
     }
-
-    public void ChangeLeader(Person newLeader)
-    {
-        newLeader.AddLeaderConnection(Leader.SpecialPrefix, this);
-        _leader = newLeader.Leader;
-    }
     
     public static List<Team> GetTeams()
     {
@@ -93,7 +87,10 @@ public class Team
         
         if (_leader != null)
         {
-            Person.RemoveFromExtent(_leader.Person);
+            //I dont know whether we want to delete person behind leader too, so for now, only leader is deleted
+            _leader.Team = null; //WHY NULL ALLOWED, whatever
+            _leader.Person.RemoveLeaderConnection();
+            Leader.RemoveFromExtent(_leader);
             _leader = null;
         }
         
@@ -110,6 +107,14 @@ public class Team
         _extent.Add(this);
         AddLeader(trainerName, age, prefix);
         
+    }
+    
+    public Team(string name, Person person, string prefix)
+    {
+        Name = name;
+        person.AddLeaderConnection(prefix,this);
+        _leader = person.Leader;
+        _extent.Add(this);
     }
 
     public static void Save(string path = "teams.xml")

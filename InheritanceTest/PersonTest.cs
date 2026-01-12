@@ -89,18 +89,18 @@ public class PersonInheritanceTest
         var person = new PersonBuilder("Hubba", 65).Build();
 
         person.AddTrainerConnection(1, 1337, [], "Active");
-        person.AddLeaderConnection("Le", team);
 
         Assert.That(person.Trainer, Is.Not.Null);
-        Assert.That(person.Leader, Is.Not.Null);
-
-
-        var person2 = new PersonBuilder("Mimic", 89).AsTrainer(12, 444, [], "Active").Build();
-
-        team.ChangeLeader(person2);
-
         Assert.That(person.Leader, Is.Null);
+        
+        person.AddLeaderConnection("Le", team);
+        
+        Assert.That(person.Trainer, Is.Not.Null);
+        Assert.That(person.Leader, Is.Not.Null);
+        
+        team.DeleteTeam();
 
-        //TODO: fix... please
+        Assert.That(person.Trainer, Is.Not.Null);
+        Assert.That(person.Leader, Is.Null);
     }
 }
